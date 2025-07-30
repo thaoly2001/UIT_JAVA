@@ -2,6 +2,23 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/DAO/SubjectDAO.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/DAO/EnrollmentDAO.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/DAO/StudentsDAO.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/DAO/TeacherDAO.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/DAO/UsersDAO.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/DAO/KetNoiCSDL.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/admin/SubjectPanel.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/admin/AdminJFrame.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/MODEL/Student.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/MODEL/Enrollment.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/MODEL/Class.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/MODEL/Users.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/MODEL/Teacher.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/admin/popup/ClassManagerDialog.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/FormDangNhap.java</file>
+            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/admin/ClassesPanel.java</file>
+        </group>
     </open-files>
 </project-private>

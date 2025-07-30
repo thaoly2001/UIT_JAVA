@@ -5,10 +5,9 @@
  */
 package GUI;
 
-import DAO.GradeDao;
 import DAO.StudentsDAO;
 import DAO.UsersDAO;
-import MODEL.Students;
+import MODEL.Student;
 import MODEL.Grade;
 import MODEL.Users;
 import java.awt.event.KeyEvent;
@@ -41,7 +40,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class QuanLiDiemSV extends javax.swing.JFrame {
 
-    GradeDao gradeDao = new GradeDao();
     StudentsDAO stuDAO = new StudentsDAO();
     UsersDAO useDao=new UsersDAO();
     List<Grade> listGrade = new ArrayList<>();
@@ -675,10 +673,10 @@ public class QuanLiDiemSV extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     public void loadFromGrade() {
-        listGrade = gradeDao.getAll(); // lay het bang diem tu DTB len
-        // sau do do thong tin cua SV dau tien len cac textfield:
-        fillInfo(listGrade.get(0));
-        DiemTB();
+//        listGrade = gradeDao.getAll(); // lay het bang diem tu DTB len
+//        // sau do do thong tin cua SV dau tien len cac textfield:
+//        fillInfo(listGrade.get(0));
+//        DiemTB();
     }
 
     public void goFirst() {
@@ -692,13 +690,13 @@ public class QuanLiDiemSV extends javax.swing.JFrame {
     }
 
     public void fillInfo(Grade grade) { // do du lieu len textfield
-        txtMaSV.setText(grade.getMaSV());
-        txtTiengAnh.setText(grade.getTiengAnh() + "");
-        txtTinHoc.setText(grade.getTinHoc() + "");
-        txtGiaoDucTC.setText(grade.getGDTC() + "");
-        Students st = stuDAO.findById(grade.getMaSV());
-        txtHoVaTen.setText(st.getHoTen());
-        DiemTB();
+//        txtMaSV.setText(grade.getMaSV());
+//        txtTiengAnh.setText(grade.getTiengAnh() + "");
+//        txtTinHoc.setText(grade.getTinHoc() + "");
+//        txtGiaoDucTC.setText(grade.getGDTC() + "");
+//        Students st = stuDAO.findById(grade.getMaSV());
+//        txtHoVaTen.setText(st.getHoTen());
+//        DiemTB();
     }
 
     public void next() {
@@ -720,137 +718,137 @@ public class QuanLiDiemSV extends javax.swing.JFrame {
     }
 
     public void timSV(String maSV) {
-        Students stu = stuDAO.findById(maSV);
-        if (stu != null) {
-            txtHoVaTen.setText(stu.getHoTen());
-            txtMaSV.setText(stu.getMaSV());
-            /*
-                xet doi tuong SV vua tim duoc co ton tai trong bang diem (GRADE) hay khong?
-                    --> neu co ton tai thi lay diem 3 cot dua len cac textfield
-                    --> neu khong ton tai thi auto set 3 cot diem la 0 0 0
-             */
-            Grade grade = gradeDao.findByMaSV(stu.getMaSV());
-            if (grade != null) {
-                btnSave.setText("UPDATE");
-                txtTiengAnh.setText(grade.getTiengAnh() + "");
-                txtTinHoc.setText(grade.getTinHoc() + "");
-                txtGiaoDucTC.setText(grade.getGDTC() + "");
-                // vong for nay dung de gan index cho cac button next/prev/...
-                for (int i = 0; i < listGrade.size(); i++) {
-                    if (grade.getID() == listGrade.get(i).getID()) {
-                        idx = i;
-                        break;
-                    }
-                }
-            } else {
-                // ..........
-                btnSave.setText("SAVE");
-                txtTiengAnh.setText("0");
-                txtTinHoc.setText("0");
-                txtGiaoDucTC.setText("0");
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Sinh vien khong ton tai!!!");
-        }
+//        Students stu = stuDAO.findById(maSV);
+//        if (stu != null) {
+//            txtHoVaTen.setText(stu.getHoTen());
+//            txtMaSV.setText(stu.getMaSV());
+//            /*
+//                xet doi tuong SV vua tim duoc co ton tai trong bang diem (GRADE) hay khong?
+//                    --> neu co ton tai thi lay diem 3 cot dua len cac textfield
+//                    --> neu khong ton tai thi auto set 3 cot diem la 0 0 0
+//             */
+//            Grade grade = gradeDao.findByMaSV(stu.getMaSV());
+//            if (grade != null) {
+//                btnSave.setText("UPDATE");
+//                txtTiengAnh.setText(grade.getTiengAnh() + "");
+//                txtTinHoc.setText(grade.getTinHoc() + "");
+//                txtGiaoDucTC.setText(grade.getGDTC() + "");
+//                // vong for nay dung de gan index cho cac button next/prev/...
+//                for (int i = 0; i < listGrade.size(); i++) {
+//                    if (grade.getID() == listGrade.get(i).getID()) {
+//                        idx = i;
+//                        break;
+//                    }
+//                }
+//            } else {
+//                // ..........
+//                btnSave.setText("SAVE");
+//                txtTiengAnh.setText("0");
+//                txtTinHoc.setText("0");
+//                txtGiaoDucTC.setText("0");
+//            }
+//        } else {
+//            JOptionPane.showMessageDialog(this, "Sinh vien khong ton tai!!!");
+//        }
     }
 
     public void saveGrade() {
-        Grade grade = gradeDao.findByMaSV(txtMaSV.getText());
-        if (grade != null) { // truong hop bang diem da ton tai masv
-            if (checkDiem(txtTiengAnh.getText()) && checkDiem(txtTinHoc.getText()) && checkDiem(txtGiaoDucTC.getText())) {
-                grade.setTiengAnh(Float.parseFloat(txtTiengAnh.getText()));
-                grade.setTinHoc(Float.parseFloat(txtTinHoc.getText()));
-                grade.setGDTC(Float.parseFloat(txtGiaoDucTC.getText()));
-                boolean result = gradeDao.update(grade);
-                if (result) {
-                    JOptionPane.showMessageDialog(this, "Luu thanh cong!!!");
-                    listGrade = gradeDao.getAll(); // lay het bang diem tu DTB len
-                } else {
-                    JOptionPane.showMessageDialog(this, "Luu that bai!!!");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Kiem tra lai diem!!!");
-            }
-
-        } else { // neu khong ton tai thi insert
-            Grade insertGrade = new Grade();
-            insertGrade.setMaSV(txtMaSV.getText());
-            insertGrade.setTiengAnh(Float.parseFloat(txtTiengAnh.getText()));
-            insertGrade.setTinHoc(Float.parseFloat(txtTinHoc.getText()));
-            insertGrade.setGDTC(Float.parseFloat(txtGiaoDucTC.getText()));
-            boolean result = gradeDao.insert(insertGrade);
-            if (result) {
-                JOptionPane.showMessageDialog(this, "Luu thanh cong!!!");
-                listGrade = gradeDao.getAll(); // lay het bang diem tu DTB len
-            } else {
-                JOptionPane.showMessageDialog(this, "Luu that bai!!!");
-            }
-            idx = listGrade.size() - 1;
-        }
-        DiemTB();
-        loadDSDiemCao();
+//        Grade grade = gradeDao.findByMaSV(txtMaSV.getText());
+//        if (grade != null) { // truong hop bang diem da ton tai masv
+//            if (checkDiem(txtTiengAnh.getText()) && checkDiem(txtTinHoc.getText()) && checkDiem(txtGiaoDucTC.getText())) {
+//                grade.setTiengAnh(Float.parseFloat(txtTiengAnh.getText()));
+//                grade.setTinHoc(Float.parseFloat(txtTinHoc.getText()));
+//                grade.setGDTC(Float.parseFloat(txtGiaoDucTC.getText()));
+//                boolean result = gradeDao.update(grade);
+//                if (result) {
+//                    JOptionPane.showMessageDialog(this, "Luu thanh cong!!!");
+//                    listGrade = gradeDao.getAll(); // lay het bang diem tu DTB len
+//                } else {
+//                    JOptionPane.showMessageDialog(this, "Luu that bai!!!");
+//                }
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Kiem tra lai diem!!!");
+//            }
+//
+//        } else { // neu khong ton tai thi insert
+//            Grade insertGrade = new Grade();
+//            insertGrade.setMaSV(txtMaSV.getText());
+//            insertGrade.setTiengAnh(Float.parseFloat(txtTiengAnh.getText()));
+//            insertGrade.setTinHoc(Float.parseFloat(txtTinHoc.getText()));
+//            insertGrade.setGDTC(Float.parseFloat(txtGiaoDucTC.getText()));
+//            boolean result = gradeDao.insert(insertGrade);
+//            if (result) {
+//                JOptionPane.showMessageDialog(this, "Luu thanh cong!!!");
+//                listGrade = gradeDao.getAll(); // lay het bang diem tu DTB len
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Luu that bai!!!");
+//            }
+//            idx = listGrade.size() - 1;
+//        }
+//        DiemTB();
+//        loadDSDiemCao();
     }
 
     public void DiemTB() {
-        Float diemTiengAnh = Float.parseFloat(txtTiengAnh.getText());
-        Float diemTinHoc = Float.parseFloat(txtTinHoc.getText());
-        Float diemGDTC = Float.parseFloat(txtGiaoDucTC.getText());
-        DecimalFormat dmf = new DecimalFormat("##.00");
-        txtDiemTrungBinh.setText(dmf.format((diemTiengAnh + diemGDTC + diemTinHoc) / 3));
+//        Float diemTiengAnh = Float.parseFloat(txtTiengAnh.getText());
+//        Float diemTinHoc = Float.parseFloat(txtTinHoc.getText());
+//        Float diemGDTC = Float.parseFloat(txtGiaoDucTC.getText());
+//        DecimalFormat dmf = new DecimalFormat("##.00");
+//        txtDiemTrungBinh.setText(dmf.format((diemTiengAnh + diemGDTC + diemTinHoc) / 3));
     }
 
     public void delete(String maSV) {
-        Grade grade = gradeDao.findByMaSV(maSV);
-        grade.setTiengAnh(-1);
-        grade.setTinHoc(-1);
-        grade.setGDTC(-1);
-        boolean result = gradeDao.update(grade);
-        if (result) {
-            JOptionPane.showMessageDialog(this, "Xoa thanh cong!!!");
-            listGrade = gradeDao.getAll(); // lay het bang diem tu DTB len
-            fillInfo(listGrade.get(idx));
-            DiemTB();
-            loadDSDiemCao();
-        } else {
-            JOptionPane.showMessageDialog(this, "Xoa that bai!!!");
-        }
+//        Grade grade = gradeDao.findByMaSV(maSV);
+//        grade.setTiengAnh(-1);
+//        grade.setTinHoc(-1);
+//        grade.setGDTC(-1);
+//        boolean result = gradeDao.update(grade);
+//        if (result) {
+//            JOptionPane.showMessageDialog(this, "Xoa thanh cong!!!");
+//            listGrade = gradeDao.getAll(); // lay het bang diem tu DTB len
+//            fillInfo(listGrade.get(idx));
+//            DiemTB();
+//            loadDSDiemCao();
+//        } else {
+//            JOptionPane.showMessageDialog(this, "Xoa that bai!!!");
+//        }
     }
 
     public void loadDSDiemCao() {
-        DefaultTableModel dtm = (DefaultTableModel) tblDSDiemCao.getModel();
-        List<Object[]> listDiemCao = gradeDao.sortByMark();
-        dtm.setRowCount(0);
-        for (Object[] row : listDiemCao) {
-            dtm.addRow(row);
-        }
+//        DefaultTableModel dtm = (DefaultTableModel) tblDSDiemCao.getModel();
+//        List<Object[]> listDiemCao = gradeDao.sortByMark();
+//        dtm.setRowCount(0);
+//        for (Object[] row : listDiemCao) {
+//            dtm.addRow(row);
+//        }
     }
 
     // ham nay load du lieu sinh vien duoc chon tu table diem cao len cac textfield
     public void readFromTable() {
-        int row = tblDSDiemCao.getSelectedRow();
-        String maSV = tblDSDiemCao.getValueAt(row, 0).toString(); // 0: la cot MaSV
-        Grade grade = gradeDao.findByMaSV(maSV);
-        fillInfo(grade);
-        // cap nhat lai index:
-        for (int i = 0; i < listGrade.size(); i++) {
-            if (grade.getID() == listGrade.get(i).getID()) {
-                idx = i;
-                break;
-            }
-        }
+//        int row = tblDSDiemCao.getSelectedRow();
+//        String maSV = tblDSDiemCao.getValueAt(row, 0).toString(); // 0: la cot MaSV
+//        Grade grade = gradeDao.findByMaSV(maSV);
+//        fillInfo(grade);
+//        // cap nhat lai index:
+//        for (int i = 0; i < listGrade.size(); i++) {
+//            if (grade.getID() == listGrade.get(i).getID()) {
+//                idx = i;
+//                break;
+//            }
+//        }
     }
 
     public boolean checkDiem(String strDiem) {
-        try {
-            float diemTA = Float.parseFloat(strDiem);
-            if (diemTA < 0 || diemTA > 10) {
-                return false;
-            } else {
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+//        try {
+//            float diemTA = Float.parseFloat(strDiem);
+//            if (diemTA < 0 || diemTA > 10) {
+//                return false;
+//            } else {
+//                return true;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
             return false;
-        }
+//        }
     }
 }

@@ -5,8 +5,11 @@
  */
 package GUI;
 
+import Constaint.RoleConstaint;
 import DAO.UsersDAO;
+import GUI.admin.AdminJFrame;
 import MODEL.Users;
+import Utils.LoginUtils;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -215,20 +218,23 @@ public class FormDangNhap extends javax.swing.JFrame {
         if (user == null) {
             JOptionPane.showMessageDialog(this, "Dang nhap that bai!!!");
         } else {
-
-            if (user.getRole() == 0) {
-                // 0 la giang vien
-
-                //new QuanLiDiemSV().setVisible(true);
-                load_F_QLDiem l1 = new load_F_QLDiem();
-                this.dispose();
-                l1.show();
-            } else {
-                // 1 la can bo dao tao
-                //new QuanLiSV().setVisible(true);
-                load_F_QLSV l2 = new load_F_QLSV();
-                this.dispose();
-                l2.show();
+            LoginUtils.setUsers(user);
+            switch (user.getRole()) {
+                case RoleConstaint.ADMIN: 
+                    AdminJFrame l1 = new AdminJFrame();
+                    this.dispose();
+                    l1.show();
+                    break;
+                case RoleConstaint.TEACH: 
+                    load_F_QLSV l2 = new load_F_QLSV();
+                    this.dispose();
+                    l2.show();
+                    break;
+                case RoleConstaint.STUDENT:
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Vai trò không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    break;
             }
             //new abc().setVisible(true);
             this.dispose();

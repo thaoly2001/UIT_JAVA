@@ -19,70 +19,31 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author DELL
  */
 public class UsersDAO extends KetNoiCSDL {
-      public UsersDAO() {
-        super(); // gọi constructor KetNoiCSDL để con != null
+
+    public UsersDAO() {
+        super(); 
     }
 
     public Users login(String username, String password) {
         Users user = null;
-        String sql = "SELECT * FROM Users WHERE Username = ? AND Password = ?";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, username);
-            ps.setString(2, password);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                user = new Users();
-                user.setUsername(rs.getString(1));
-                user.setPassword(rs.getString(2));
-                user.setRole(rs.getByte(3));
-                user.setFullname(rs.getString(4));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
+        String sql = "SELECT * FROM Users u WHERE u.username = ? AND u.password = ?";
+        System.out.println(username);
+        try (Connection conn = getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
 
-    /*
-    public  Users login2(String username) {
-        Users user = null;
-        String sql = "SELECT * FROM Users WHERE Username = ?";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 user = new Users();
-                user.setUsername(rs.getString(1));
-                user.setPassword(rs.getString(2));
-                user.setRole(rs.getByte(3));
-                user.setFullname(rs.getString(4));
+                user.setId(rs.getLong("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getByte("role"));
+                user.setFullname(rs.getString("fullname"));
+                user.setEmail(rs.getString("email"));
             }
-        } catch (Exception e) {
-          
-            JOptionPane.showMessageDialog(null, "Sai Tk or MK");
-            return null;
-        }
-        return user;
-    }
-     */
-    public Users findByUsernameAndEmail(String username, String email) {
-        Users user = null;
-        String sql = "select * from users where username = ? and email = ?";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, username);
-            ps.setString(2, email);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                user = new Users();
-                user.setUsername(rs.getString(1));
-                user.setPassword(rs.getString(2));
-                user.setRole(rs.getByte(3));
-                user.setFullname(rs.getString(4));
-            }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return user;
@@ -91,11 +52,11 @@ public class UsersDAO extends KetNoiCSDL {
     public boolean updatePassword(Users user) {
         int check = 0;
         String sql = "update users set password = ? where username = ?";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, user.getPassword());
-            ps.setString(2, user.getUsername());
-            check = ps.executeUpdate();
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user.getPassword());
+            stmt.setString(2, user.getUsername());
+            check = stmt.executeUpdate();
             if (check > 0) {
                 return true;
             } else {
@@ -137,7 +98,6 @@ public class UsersDAO extends KetNoiCSDL {
 //        }
 //        return false;
 //    }
-
     //
 //    public boolean xuatFileRow(Users user) {
 //        int rowNum = 1;
@@ -171,6 +131,5 @@ public class UsersDAO extends KetNoiCSDL {
 //        }
 //        return false;
 //    }
-
 //    public static 
 }

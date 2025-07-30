@@ -6,8 +6,7 @@
 package GUI;
 
 import DAO.StudentsDAO;
-import DAO.GradeDao;
-import MODEL.Students;
+import MODEL.Student;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
@@ -28,8 +27,7 @@ import javax.swing.table.DefaultTableModel;
 public class QuanLiSV extends javax.swing.JFrame {
 
     StudentsDAO stuDao = new StudentsDAO();
-    GradeDao gradeDAO = new GradeDao();
-    List<Students> list = new ArrayList<>();
+    List<Student> list = new ArrayList<>();
     String fileSaveName = null;
 
     public QuanLiSV() {
@@ -43,8 +41,8 @@ public class QuanLiSV extends javax.swing.JFrame {
         list = stuDao.getAll();
         DefaultTableModel model = (DefaultTableModel) tblQuanLiSinhVien.getModel();
         model.setRowCount(0);
-        for (Students st : list) {
-            Object row[] = {st.getMaSV(), st.getHoTen(), st.getEmail(), st.getSDT(), st.getGioiTinh(), st.getDiaChi(), st.getHinh()};
+        for (Student st : list) {
+            Object row[] = {};
             model.addRow(row);
         }
         tblQuanLiSinhVien.setModel(model);
@@ -516,25 +514,25 @@ public class QuanLiSV extends javax.swing.JFrame {
     }
 
     public void save() {
-        Students st = new Students();
-        st.setMaSV(txtMaSV.getText());
-        st.setHoTen(txtHoTen.getText());
-        st.setEmail(txtEmail.getText());
-        st.setSDT(txtSoDT.getText());
-        if (rdoNam.isSelected()) {
-            st.setGioiTinh("Nam");
-        } else {
-            st.setGioiTinh("Nữ");
-        }
-        st.setDiaChi(txaDiaChi.getText());
-        st.setHinh(null);
-        boolean result = stuDao.insert(st);
-        if (result == true) {
-            JOptionPane.showMessageDialog(this, "Luu thành công");
-            loadDataToTable();
-        } else {
-            JOptionPane.showMessageDialog(this, "Luu thất bại");
-        }
+//        Student st = new Student();
+//        st.setMaSV(txtMaSV.getText());
+//        st.setHoTen(txtHoTen.getText());
+//        st.setEmail(txtEmail.getText());
+//        st.setSDT(txtSoDT.getText());
+//        if (rdoNam.isSelected()) {
+//            st.setGioiTinh("Nam");
+//        } else {
+//            st.setGioiTinh("Nữ");
+//        }
+//        st.setDiaChi(txaDiaChi.getText());
+//        st.setHinh(null);
+//        boolean result = stuDao.insert(st);
+//        if (result == true) {
+//            JOptionPane.showMessageDialog(this, "Luu thành công");
+//            loadDataToTable();
+//        } else {
+//            JOptionPane.showMessageDialog(this, "Luu thất bại");
+//        }
     }
 
     public void deleteSV() {
@@ -542,7 +540,7 @@ public class QuanLiSV extends javax.swing.JFrame {
         boolean result = stuDao.delete(maSV);
         
         if (result) {
-            gradeDAO.delete(maSV);
+//            gradeDAO.delete(maSV);
             JOptionPane.showMessageDialog(rootPane, "Xoa thanh cong");
             loadDataToTable();
         } else {
@@ -551,36 +549,36 @@ public class QuanLiSV extends javax.swing.JFrame {
     }
 
     public void update() {
-        Students model = new Students();
-        model.setMaSV(txtMaSV.getText());
-        model.setHoTen(txtHoTen.getText());
-        model.setEmail(txtEmail.getText());
-        model.setSDT(txtSoDT.getText());
-        if (rdoNam.isSelected()) {
-            model.setGioiTinh("Nam");
-        } else {
-            model.setGioiTinh("Nữ");
-        }
-        model.setDiaChi(txaDiaChi.getText());
-        if (fileSaveName != null) {
-            model.setHinh(fileSaveName);
-        } else {
-            int row = tblQuanLiSinhVien.getSelectedRow();
-            Object objFileHinh = tblQuanLiSinhVien.getValueAt(row, 6);
-            if (objFileHinh == null) { // svien nay chua co hinh
-                model.setHinh(null);
-            } else {
-                String fileHinh = objFileHinh.toString();  // day la ten file hinh cu~ cua sinhvien
-                model.setHinh(fileHinh);
-            }
-        }
-        boolean result = stuDao.update(model);
-        if (result) {
-            JOptionPane.showMessageDialog(rootPane, "Update thanh cong");
-            loadDataToTable();
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Update that bai");
-        }
+//        Students model = new Students();
+//        model.setMaSV(txtMaSV.getText());
+//        model.setHoTen(txtHoTen.getText());
+//        model.setEmail(txtEmail.getText());
+//        model.setSDT(txtSoDT.getText());
+//        if (rdoNam.isSelected()) {
+//            model.setGioiTinh("Nam");
+//        } else {
+//            model.setGioiTinh("Nữ");
+//        }
+//        model.setDiaChi(txaDiaChi.getText());
+//        if (fileSaveName != null) {
+//            model.setHinh(fileSaveName);
+//        } else {
+//            int row = tblQuanLiSinhVien.getSelectedRow();
+//            Object objFileHinh = tblQuanLiSinhVien.getValueAt(row, 6);
+//            if (objFileHinh == null) { // svien nay chua co hinh
+//                model.setHinh(null);
+//            } else {
+//                String fileHinh = objFileHinh.toString();  // day la ten file hinh cu~ cua sinhvien
+//                model.setHinh(fileHinh);
+//            }
+//        }
+//        boolean result = stuDao.update(model);
+//        if (result) {
+//            JOptionPane.showMessageDialog(rootPane, "Update thanh cong");
+//            loadDataToTable();
+//        } else {
+//            JOptionPane.showMessageDialog(rootPane, "Update that bai");
+//        }
     }
 
 //    public void image(String hinh) {

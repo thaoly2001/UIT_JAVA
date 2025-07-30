@@ -153,7 +153,7 @@ public class Sendmail extends javax.swing.JFrame {
     void checkInfo() {
         String username = txtUsername.getText();
         String email = txtEmailAddress.getText();
-        Users user = userDAO.findByUsernameAndEmail(username, email);
+        Users user = userDAO.login(username, email);
         if (user != null) {
             String newPass = randomPassword();
             user.setPassword(newPass); // tao password moi cho user
