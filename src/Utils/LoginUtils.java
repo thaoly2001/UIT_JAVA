@@ -2,6 +2,8 @@ package Utils;
 
 
 import MODEL.Users;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -21,5 +23,21 @@ public class LoginUtils {
 
     public static Long getId() {
         return u.getId();
+    }
+    
+     public static String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashed = md.digest(password.getBytes());
+            
+            // Convert to hex string
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashed) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

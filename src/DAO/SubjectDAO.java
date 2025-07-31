@@ -16,7 +16,7 @@ public class SubjectDAO extends KetNoiCSDL {
     }
 
     // Thêm môn học
-    public boolean insert(Subject subject) {
+    public Subject insert(Subject subject) {
         String sql = "INSERT INTO subjects (name, credit, is_deleted) VALUES (?, ?, ?)";
 
         try (Connection conn = getConnection();
@@ -33,12 +33,19 @@ public class SubjectDAO extends KetNoiCSDL {
                         subject.setId(rs.getLong(1));
                     }
                 }
-                return true;
+                if (rows > 0) {
+                    try (ResultSet rs = stmt.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            subject.setId(rs.getLong(1)); // gán ID tự sinh
+                        }
+                    }
+                    return subject;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     // Cập nhật môn học

@@ -1,61 +1,65 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package MODEL;
-
-import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Classes {
     private Long id;
     private String name;
-    private int credit;
+    private Subject subject;
     private Teacher teacher;
+    private boolean isDeleted;
 
-    public Classes(Long id, String name, int credit, Teacher teacher) {
+    public Classes() {
+    }
+
+    public Classes(Long id, String name, Subject subject, Teacher teacher, boolean isDeleted) {
         this.id = id;
         this.name = name;
-        this.credit = credit;
+        this.subject = subject;
         this.teacher = teacher;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCredit(int credit) {
-        this.credit = credit;
-    }
-
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
+        this.isDeleted = isDeleted;
     }
 
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
-    public int getCredit() {
-        return credit;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     public Teacher getTeacher() {
         return teacher;
     }
-    
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
     @Override
     public String toString() {
-        return name; 
+        return name;
     }
 }

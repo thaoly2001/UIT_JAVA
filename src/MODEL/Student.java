@@ -11,7 +11,6 @@ public class Student {
     private String address;
     private String gender;
     private LocalDate birthday;
-    private String department;
 
     public Long getId() {
         return id;
@@ -67,14 +66,6 @@ public class Student {
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
     }
 
 }

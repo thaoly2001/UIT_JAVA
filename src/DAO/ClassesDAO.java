@@ -1,11 +1,15 @@
 package DAO;
 
+import MODEL.Classes;
+import MODEL.Subject;
 import MODEL.Teacher;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClassesDAO extends KetNoiCSDL {
+
     private static ClassesDAO instance;
 
     public static ClassesDAO getInstance() {
@@ -15,74 +19,64 @@ public class ClassesDAO extends KetNoiCSDL {
         return instance;
     }
 
-    // Thêm giáo viên
-   public boolean insert(Teacher t) {
-    String sql = "INSERT INTO teachers (name, email, phone, address, gender, birthday, department) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    // Thêm lớp học
+    public Classes insert(Classes cls) {
+        String sql = "INSERT INTO classes (name, subject_id, teacher_id, is_deleted) VALUES (?, ?, ?, ?)";
 
-    try (Connection conn = getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-        stmt.setString(1, t.getName());
-        stmt.setString(2, t.getEmail());
-        stmt.setString(3, t.getPhone());
-        stmt.setString(4, t.getAddress());
-        stmt.setString(5, t.getGender());
-        if (t.getBirthday() != null) {
-            stmt.setDate(6, Date.valueOf(t.getBirthday())); // LocalDate -> SQL Date
-        } else {
-            stmt.setNull(6, Types.DATE);
-        }
-        stmt.setString(7, t.getDepartment());
-
-        int rows = stmt.executeUpdate();
-        if (rows > 0) {
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                if (rs.next()) t.setId(rs.getLong(1)); 
+            stmt.setString(1, cls.getName());
+            stmt.setLong(2, cls.getSubject().getId());
+            if (cls.getTeacher() != null) {
+                stmt.setLong(3, cls.getTeacher().getId());
+            } else {
+                stmt.setNull(3, Types.BIGINT);
             }
-            return true;
+            stmt.setBoolean(4, cls.isDeleted());
+
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        cls.setId(rs.getLong(1));
+                    }
+                }
+                return cls;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return null;
     }
-    return false;
-}
 
+    // Cập nhật lớp học
+    public boolean update(Long id, Classes cls) {
+        String sql = "UPDATE classes SET name = ?, subject_id = ?, teacher_id = ?, is_deleted = ? WHERE id = ?";
 
-    // Cập nhậtextractTeacherFromResultSet
-    public boolean update(Long id, Teacher t) {
-    String sql = "UPDATE teachers SET name = ?, email = ?, phone = ?, address = ?, gender = ?, birthday = ?, department = ? WHERE id = ?";
-    try (Connection conn = getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        stmt.setString(1, t.getName());
-        stmt.setString(2, t.getEmail());
-        stmt.setString(3, t.getPhone());
-        stmt.setString(4, t.getAddress());
-        stmt.setString(5, t.getGender());
+            stmt.setString(1, cls.getName());
+            stmt.setLong(2, cls.getSubject().getId());
+            if (cls.getTeacher() != null) {
+                stmt.setLong(3, cls.getTeacher().getId());
+            } else {
+                stmt.setNull(3, Types.BIGINT);
+            }
+            stmt.setBoolean(4, cls.isDeleted());
+            stmt.setLong(5, id);
 
-        if (t.getBirthday() != null) {
-            stmt.setDate(6, Date.valueOf(t.getBirthday()));
-        } else {
-            stmt.setNull(6, Types.DATE);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        stmt.setString(7, t.getDepartment());
-        stmt.setLong(8, id);
-
-        return stmt.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
 
-
-    // Xoá
+    // Xoá mềm (soft delete)
     public boolean delete(long id) {
-        String sql = "DELETE FROM teachers WHERE id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "UPDATE classes SET is_deleted = 1 WHERE id = ?";
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
             return stmt.executeUpdate() > 0;
@@ -93,59 +87,49 @@ public class ClassesDAO extends KetNoiCSDL {
     }
 
     // Tìm theo ID
-    public Teacher findById(long id) {
-    String sql = "SELECT * FROM teachers WHERE id = ?";
-    try (Connection conn = getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
+    public Classes findById(long id) {
+        String sql = "SELECT * FROM classes WHERE id = ?";
 
-        stmt.setLong(1, id);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            return extractTeacherFromResultSet(rs);
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return extractClassFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return null;
     }
-    return null;
-}
 
+    // Lấy tất cả lớp học (kể cả đã bị xóa mềm)
+    public List<Classes> findAll() {
+        List<Classes> list = new ArrayList<>();
+        String sql = "SELECT * FROM classes";
 
-    // Lấy tất cả
-    public List<Teacher> findAll() {
-        List<Teacher> list = new ArrayList<>();
-        String sql = "SELECT * FROM teachers";
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                list.add(extractTeacherFromResultSet(rs));
+                list.add(extractClassFromResultSet(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
     }
-    
-    private Teacher extractTeacherFromResultSet(ResultSet rs) throws SQLException {
-    Teacher teacher = new Teacher();
-    teacher.setId(rs.getLong("id"));
-    teacher.setName(rs.getString("name"));
-    teacher.setEmail(rs.getString("email"));
-    teacher.setPhone(rs.getString("phone"));
-    teacher.setAddress(rs.getString("address"));
-    teacher.setGender(rs.getString("gender"));
 
-    Date birthdaySql = rs.getDate("birthday");
-    if (birthdaySql != null) {
-        teacher.setBirthday(birthdaySql.toLocalDate());
-    } else {
-        teacher.setBirthday(null);
+    // Hàm hỗ trợ: trích xuất dữ liệu lớp học từ ResultSet
+    private Classes extractClassFromResultSet(ResultSet rs) throws SQLException {
+        Long id = rs.getLong("id");
+        String name = rs.getString("name");
+        Long subjectId = rs.getLong("subject_id");
+        Long teacherId = rs.getLong("teacher_id");
+        boolean isDeleted = rs.getBoolean("is_deleted");
+
+        Subject subject = SubjectDAO.getInstance().findById(subjectId);
+        Teacher teacher = (teacherId != 0) ? TeacherDAO.getInstance().findById(teacherId) : null;
+
+        return new Classes(id, name, subject, teacher, isDeleted);
     }
-
-    teacher.setDepartment(rs.getString("department"));
-    return teacher;
-}
-
 }

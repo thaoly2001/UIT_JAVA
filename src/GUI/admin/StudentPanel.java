@@ -6,6 +6,7 @@ package GUI.admin;
 
 import DAO.StudentsDAO;
 import GUI.admin.popup.StudentDialog;
+import MODEL.Student;
 import Utils.tableFillingUtils;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -24,20 +25,17 @@ public class StudentPanel extends javax.swing.JPanel {
     public StudentPanel() {
         initComponents();
         initData();
-        System.out.println("GUI.General.views.admin.EmployeePanel.<init>()");
+        System.out.println("st");
     }
 
     private void initData() {
-//        List<Employee> list = dao.getAll(); // Hoặc dao.getAll() tùy bạn
-//        DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
-//
-//        model.setRowCount(0); // Xóa dữ liệu cũ trong bảng
-//
-//        for (Employee emp : list) {
-//            model.addRow(new Object[]{
-//                tableFillingUtils.fillEmp(emp)
-//            });
-//        }
+        List<Student> list = dao.getAll(); 
+        DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+        model.setRowCount(0); 
+
+        for (Student stu : list) {
+            model.addRow(tableFillingUtils.fillStu(stu));
+        }
     }
 
     /**
@@ -50,7 +48,7 @@ public class StudentPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        employeeTable = new javax.swing.JTable();
+        studentTable = new javax.swing.JTable();
         btnAdd = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
@@ -59,23 +57,22 @@ public class StudentPanel extends javax.swing.JPanel {
         prevPageBtn = new javax.swing.JButton();
         nextPageBtn = new javax.swing.JButton();
 
-        employeeTable.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        employeeTable.setModel(new javax.swing.table.DefaultTableModel(
+        studentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Tên", "Email", "Phòng ban", "Hoạt Động"
+                "ID", "Tên", "Email", "Số điện thoại", "Giới tính", "Ngày sinh"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -86,12 +83,14 @@ public class StudentPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(employeeTable);
-        if (employeeTable.getColumnModel().getColumnCount() > 0) {
-            employeeTable.getColumnModel().getColumn(0).setResizable(false);
-            employeeTable.getColumnModel().getColumn(1).setResizable(false);
-            employeeTable.getColumnModel().getColumn(2).setResizable(false);
-            employeeTable.getColumnModel().getColumn(3).setResizable(false);
+        jScrollPane1.setViewportView(studentTable);
+        if (studentTable.getColumnModel().getColumnCount() > 0) {
+            studentTable.getColumnModel().getColumn(0).setResizable(false);
+            studentTable.getColumnModel().getColumn(1).setResizable(false);
+            studentTable.getColumnModel().getColumn(2).setResizable(false);
+            studentTable.getColumnModel().getColumn(3).setResizable(false);
+            studentTable.getColumnModel().getColumn(4).setResizable(false);
+            studentTable.getColumnModel().getColumn(5).setResizable(false);
         }
 
         btnAdd.setText("Thêm");
@@ -166,7 +165,7 @@ public class StudentPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        StudentDialog dialog = new StudentDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, null, employeeTable);
+        StudentDialog dialog = new StudentDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, null, studentTable);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_btnAddActionPerformed
@@ -180,11 +179,11 @@ public class StudentPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JTable employeeTable;
     private javax.swing.JButton firstPageBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton lastPageBtn;
     private javax.swing.JButton nextPageBtn;
     private javax.swing.JButton prevPageBtn;
+    private javax.swing.JTable studentTable;
     // End of variables declaration//GEN-END:variables
 }

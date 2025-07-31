@@ -4,12 +4,15 @@
  */
 package GUI.admin;
 
+import DAO.ClassesDAO;
 import DAO.EnrollmentDAO;
 import DAO.StudentsDAO;
 import DAO.SubjectDAO;
 import DAO.TeacherDAO;
+import GUI.admin.popup.ClassesDialog;
 import GUI.admin.popup.StudentDialog;
 import GUI.admin.popup.TeacherDialog;
+import MODEL.Classes;
 import MODEL.Enrollment;
 import MODEL.Subject;
 import MODEL.Teacher;
@@ -24,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ClassesPanel extends javax.swing.JPanel {
 
-    private SubjectDAO dao = SubjectDAO.getInstance();
+    private ClassesDAO dao = ClassesDAO.getInstance();
 
     /**
      * Creates new form EmployeePanel
@@ -33,18 +36,17 @@ public class ClassesPanel extends javax.swing.JPanel {
         initComponents();
         initClassCbx();
         initData();
-        System.out.println("GUI.General.views.admin.EmployeePanel.<init>()");
     }
 
     private void initData() {
         
-        List<Subject> list = dao.findAll(); // Hoặc dao.getAll() tùy bạn
+        List<Classes> list = dao.findAll(); // Hoặc dao.getAll() tùy bạn
         DefaultTableModel model = (DefaultTableModel) teacherTable.getModel();
         System.out.println(list.size());
         model.setRowCount(0); // Xóa dữ liệu cũ trong bảng
 
-        for (Subject te : list) {
-            model.addRow(tableFillingUtils.fillSubject(te));
+        for (Classes cl : list) {
+            model.addRow(tableFillingUtils.fillClasses(cl));
         }
     }
 
@@ -69,17 +71,17 @@ public class ClassesPanel extends javax.swing.JPanel {
 
         teacherTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Tên", "Email", "Số điện thoại", "Giới Tính", "Bộ môn"
+                "ID", "Tên lớp", "Môn học", "Tên Giảng Viên", "Trạng Thái "
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -93,7 +95,6 @@ public class ClassesPanel extends javax.swing.JPanel {
             teacherTable.getColumnModel().getColumn(2).setResizable(false);
             teacherTable.getColumnModel().getColumn(3).setResizable(false);
             teacherTable.getColumnModel().getColumn(4).setResizable(false);
-            teacherTable.getColumnModel().getColumn(5).setResizable(false);
         }
 
         btnAdd.setText("Thêm");
@@ -127,25 +128,26 @@ public class ClassesPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(firstPageBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(prevPageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(nextPageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lastPageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(31, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(41, 41, 41)
+                                .addComponent(firstPageBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(prevPageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(nextPageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lastPageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 172, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,7 +169,7 @@ public class ClassesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        TeacherDialog dialog = new TeacherDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, null, teacherTable);
+        ClassesDialog dialog = new ClassesDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, null, teacherTable);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_btnAddActionPerformed

@@ -536,16 +536,16 @@ public class QuanLiSV extends javax.swing.JFrame {
     }
 
     public void deleteSV() {
-        String maSV = txtMaSV.getText();
-        boolean result = stuDao.delete(maSV);
-        
-        if (result) {
-//            gradeDAO.delete(maSV);
-            JOptionPane.showMessageDialog(rootPane, "Xoa thanh cong");
-            loadDataToTable();
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Xoa that bai");
-        }
+//        String maSV = txtMaSV.getText();
+//        boolean result = stuDao.delete(maSV);
+//        
+//        if (result) {
+////            gradeDAO.delete(maSV);
+//            JOptionPane.showMessageDialog(rootPane, "Xoa thanh cong");
+//            loadDataToTable();
+//        } else {
+//            JOptionPane.showMessageDialog(rootPane, "Xoa that bai");
+//        }
     }
 
     public void update() {
