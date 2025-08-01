@@ -12,7 +12,7 @@ public class Teacher {
     private String gender;
     private LocalDate birthday;
     private String department;
-
+    
     public Teacher() {
     }
 

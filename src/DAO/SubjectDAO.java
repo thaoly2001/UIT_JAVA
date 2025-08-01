@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubjectDAO extends KetNoiCSDL {
+
     private static SubjectDAO instance;
 
     public static SubjectDAO getInstance() {
@@ -19,8 +20,7 @@ public class SubjectDAO extends KetNoiCSDL {
     public Subject insert(Subject subject) {
         String sql = "INSERT INTO subjects (name, credit, is_deleted) VALUES (?, ?, ?)";
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, subject.getName());
             stmt.setInt(2, subject.getCredit());
@@ -52,8 +52,7 @@ public class SubjectDAO extends KetNoiCSDL {
     public boolean update(Long id, Subject subject) {
         String sql = "UPDATE subjects SET name = ?, credit = ?, is_deleted = ? WHERE id = ?";
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, subject.getName());
             stmt.setInt(2, subject.getCredit());
@@ -71,8 +70,7 @@ public class SubjectDAO extends KetNoiCSDL {
     public boolean delete(long id) {
         String sql = "UPDATE subjects SET is_deleted = 1 WHERE id = ?";
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
             return stmt.executeUpdate() > 0;
@@ -86,8 +84,7 @@ public class SubjectDAO extends KetNoiCSDL {
     public Subject findById(long id) {
         String sql = "SELECT * FROM subjects WHERE id = ?";
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -105,9 +102,7 @@ public class SubjectDAO extends KetNoiCSDL {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT * FROM subjects";
 
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 list.add(extractSubjectFromResultSet(rs));
@@ -123,9 +118,7 @@ public class SubjectDAO extends KetNoiCSDL {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT * FROM subjects WHERE is_deleted = 0";
 
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 list.add(extractSubjectFromResultSet(rs));
@@ -134,6 +127,68 @@ public class SubjectDAO extends KetNoiCSDL {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public List<Subject> searchSubjects(String keyword, int page, int pageSize) {
+        List<Subject> list = new ArrayList<>();
+        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM subjects WHERE isdeleted = 0");
+        if (hasKeyword) {
+            sql.append(" AND name LIKE ?");
+        }
+        sql.append(" ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (hasKeyword) {
+                stmt.setString(paramIndex++, "%" + keyword + "%");
+            }
+
+            stmt.setInt(paramIndex++, (page - 1) * pageSize);
+            stmt.setInt(paramIndex, pageSize);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Subject subject = new Subject();
+                    subject.setId(rs.getLong("id"));
+                    subject.setName(rs.getString("name"));
+                    subject.setCredit(rs.getInt("credit"));
+                    subject.setIsdeleted(rs.getBoolean("isdeleted"));
+                    list.add(subject);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public int countSearchSubjects(String keyword) {
+        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
+
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM subjects WHERE isdeleted = 0");
+        if (hasKeyword) {
+            sql.append(" AND name LIKE ?");
+        }
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+            if (hasKeyword) {
+                stmt.setString(1, "%" + keyword + "%");
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
     // Trích xuất Subject từ ResultSet

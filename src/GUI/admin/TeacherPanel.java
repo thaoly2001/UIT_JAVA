@@ -62,17 +62,17 @@ public class TeacherPanel extends javax.swing.JPanel {
 
         teacherTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Tên", "Email", "Số điện thoại", "Giới Tính", "Bộ môn"
+                "ID", "Tên", "Email", "Số điện thoại", "Giới Tính"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -86,7 +86,6 @@ public class TeacherPanel extends javax.swing.JPanel {
             teacherTable.getColumnModel().getColumn(2).setResizable(false);
             teacherTable.getColumnModel().getColumn(3).setResizable(false);
             teacherTable.getColumnModel().getColumn(4).setResizable(false);
-            teacherTable.getColumnModel().getColumn(5).setResizable(false);
         }
 
         btnAdd.setText("Thêm");

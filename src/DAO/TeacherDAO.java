@@ -129,6 +129,39 @@ public class TeacherDAO extends KetNoiCSDL {
         return list;
     }
 
+    public List<Teacher> searchTeachers(String keyword, int page, int pageSize) {
+        List<Teacher> list = new ArrayList<>();
+        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM teachers");
+        if (hasKeyword) {
+            sql.append(" WHERE name LIKE ? OR email LIKE ?");
+        }
+        sql.append(" ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (hasKeyword) {
+                stmt.setString(paramIndex++, "%" + keyword + "%");
+                stmt.setString(paramIndex++, "%" + keyword + "%");
+            }
+
+            stmt.setInt(paramIndex++, (page - 1) * pageSize);
+            stmt.setInt(paramIndex, pageSize);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(extractTeacherFromResultSet(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     private Teacher extractTeacherFromResultSet(ResultSet rs) throws SQLException {
         Teacher teacher = new Teacher();
         teacher.setId(rs.getLong("id"));

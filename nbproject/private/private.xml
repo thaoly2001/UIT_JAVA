@@ -2,20 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/admin/SubjectsPanel.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/admin/popup/SubjectsDialog.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/admin/popup/TeacherDialog.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/MODEL/Subject.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/admin/ClassManagerPanel.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/admin/AdminJFrame.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/admin/TeacherPanel.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/DAO/TeacherDAO.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/QuanLiDiemSV.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/QuanLiSV.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/GUI/FormDangNhap.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/Utils/validationUtils.java</file>
-            <file>file:/C:/sourcesCode/personal/Learning/UIT/Sem3/java/UIT_JAVA/src/Utils/PasswordUtil.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
