@@ -1,6 +1,7 @@
 package DAO;
 
 import MODEL.Subject;
+import Utils.PageResult;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +17,72 @@ public class SubjectDAO extends KetNoiCSDL {
         return instance;
     }
 
-    // Thêm môn học
+    public PageResult<Subject> search(String keyword, int page, int pageSize) {
+        List<Subject> list = new ArrayList<>();
+        int totalRecords = 0;
+
+        String countSql = "SELECT COUNT(*) "
+                + "FROM subjects s "
+                + "WHERE (s.name LIKE ?) AND s.is_deleted = 0 ";
+
+        String dataSql = "SELECT * "
+                + "FROM subjects s "
+                + "WHERE (s.name LIKE ?) AND s.is_deleted = 0 "
+                + "ORDER BY s.id DESC "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (Connection conn = getConnection()) {
+            // 1. Đếm tổng số bản ghi
+            try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
+                String keywordPattern = "%" + keyword + "%";
+                stmt.setString(1, keywordPattern);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        totalRecords = rs.getInt(1);
+                    }
+                }
+            }
+
+            // 2. Lấy dữ liệu phân trang
+            try (PreparedStatement stmt = conn.prepareStatement(dataSql)) {
+                String keywordPattern = "%" + keyword + "%";
+                stmt.setString(1, keywordPattern);
+
+                int offset = Math.max(page, 0) * pageSize;
+
+                stmt.setInt(2, offset);
+                stmt.setInt(3, pageSize);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(extractSubjectFromResultSet(rs));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new PageResult<>(list, page, pageSize, totalRecords);
+    }
+
+    private Subject extractSubjectFromResultSet(ResultSet rs) throws SQLException {
+        Subject subject = new Subject();
+        subject.setId(rs.getLong("id"));
+        subject.setName(rs.getString("name"));
+        subject.setCredit(rs.getInt("credit"));
+        subject.setStatus(rs.getBoolean("status"));
+        return subject;
+    }
+
     public Subject insert(Subject subject) {
-        String sql = "INSERT INTO subjects (name, credit, is_deleted) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO subjects (name, credit, status) VALUES (?, ?, ?)";
 
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
             stmt.setString(1, subject.getName());
             stmt.setInt(2, subject.getCredit());
-            stmt.setBoolean(3, subject.isIsdeleted());
-
+            stmt.setBoolean(3, subject.isStatus());
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -33,14 +90,7 @@ public class SubjectDAO extends KetNoiCSDL {
                         subject.setId(rs.getLong(1));
                     }
                 }
-                if (rows > 0) {
-                    try (ResultSet rs = stmt.getGeneratedKeys()) {
-                        if (rs.next()) {
-                            subject.setId(rs.getLong(1)); // gán ID tự sinh
-                        }
-                    }
-                    return subject;
-                }
+                return subject;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -48,17 +98,13 @@ public class SubjectDAO extends KetNoiCSDL {
         return null;
     }
 
-    // Cập nhật môn học
     public boolean update(Long id, Subject subject) {
-        String sql = "UPDATE subjects SET name = ?, credit = ?, is_deleted = ? WHERE id = ?";
-
+        String sql = "UPDATE subjects SET name = ?, credit = ?, status = ? WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setString(1, subject.getName());
             stmt.setInt(2, subject.getCredit());
-            stmt.setBoolean(3, subject.isIsdeleted());
+            stmt.setBoolean(3, subject.isStatus());
             stmt.setLong(4, id);
-
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,12 +112,9 @@ public class SubjectDAO extends KetNoiCSDL {
         return false;
     }
 
-    // Xoá mềm (đánh dấu is_deleted = 1)
     public boolean delete(long id) {
         String sql = "UPDATE subjects SET is_deleted = 1 WHERE id = ?";
-
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setLong(1, id);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -80,12 +123,9 @@ public class SubjectDAO extends KetNoiCSDL {
         return false;
     }
 
-    // Tìm theo ID
     public Subject findById(long id) {
         String sql = "SELECT * FROM subjects WHERE id = ?";
-
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -97,13 +137,10 @@ public class SubjectDAO extends KetNoiCSDL {
         return null;
     }
 
-    // Lấy tất cả (cả bị xoá)
     public List<Subject> findAll() {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT * FROM subjects";
-
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-
             while (rs.next()) {
                 list.add(extractSubjectFromResultSet(rs));
             }
@@ -129,41 +166,54 @@ public class SubjectDAO extends KetNoiCSDL {
         return list;
     }
 
-    public List<Subject> searchSubjects(String keyword, int page, int pageSize) {
+    public PageResult<Subject> searchSubjects(String keyword, int page, int pageSize) {
         List<Subject> list = new ArrayList<>();
-        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
+        int totalRecords = 0;
 
-        StringBuilder sql = new StringBuilder("SELECT * FROM subjects WHERE isdeleted = 0");
-        if (hasKeyword) {
-            sql.append(" AND name LIKE ?");
-        }
-        sql.append(" ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        String countSql = "SELECT COUNT(*) FROM subjects WHERE name LIKE ? AND is_deleted = 0";
 
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-            int paramIndex = 1;
+        String dataSql = "SELECT id, name, credit, is_deleted "
+                + "FROM subjects "
+                + "WHERE name LIKE ? "
+                + "ORDER BY id DESC "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
-            if (hasKeyword) {
-                stmt.setString(paramIndex++, "%" + keyword + "%");
-            }
+        try (Connection conn = getConnection()) {
+            // 1. Đếm số bản ghi
+            try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
+                String pattern = "%" + keyword + "%";
+                stmt.setString(1, pattern);
 
-            stmt.setInt(paramIndex++, (page - 1) * pageSize);
-            stmt.setInt(paramIndex, pageSize);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Subject subject = new Subject();
-                    subject.setId(rs.getLong("id"));
-                    subject.setName(rs.getString("name"));
-                    subject.setCredit(rs.getInt("credit"));
-                    subject.setIsdeleted(rs.getBoolean("isdeleted"));
-                    list.add(subject);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        totalRecords = rs.getInt(1);
+                    }
                 }
             }
+
+            // 2. Lấy dữ liệu phân trang
+            try (PreparedStatement stmt = conn.prepareStatement(dataSql)) {
+                String pattern = "%" + keyword + "%";
+                stmt.setString(1, pattern);
+
+                int safePage = Math.max(page, 1);
+                int offset = (safePage - 1) * pageSize;
+
+                stmt.setInt(2, offset);
+                stmt.setInt(3, pageSize);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(extractSubjectFromResultSet(rs));
+                    }
+                }
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return list;
+        return new PageResult<>(list, page, pageSize, totalRecords);
     }
 
     public int countSearchSubjects(String keyword) {
@@ -191,13 +241,13 @@ public class SubjectDAO extends KetNoiCSDL {
         return 0;
     }
 
-    // Trích xuất Subject từ ResultSet
-    private Subject extractSubjectFromResultSet(ResultSet rs) throws SQLException {
-        Subject subject = new Subject();
-        subject.setId(rs.getLong("id"));
-        subject.setName(rs.getString("name"));
-        subject.setCredit(rs.getInt("credit"));
-        subject.setIsdeleted(rs.getBoolean("is_deleted"));
-        return subject;
-    }
+//    // Trích xuất Subject từ ResultSet
+//    private Subject extractSubjectFromResultSet(ResultSet rs) throws SQLException {
+//        Subject subject = new Subject();
+//        subject.setId(rs.getLong("id"));
+//        subject.setName(rs.getString("name"));
+//        subject.setCredit(rs.getInt("credit"));
+//        subject.setIsdeleted(rs.getBoolean("is_deleted"));
+//        return subject;
+//    }
 }

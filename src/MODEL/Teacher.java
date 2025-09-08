@@ -12,11 +12,12 @@ public class Teacher {
     private String gender;
     private LocalDate birthday;
     private String department;
+    private byte[] img;
     
     public Teacher() {
     }
 
-    public Teacher(Long id, String name, String email, String phone, String address, String gender, LocalDate birthday, String department) {
+    public Teacher(Long id, String name, String email, String phone, String address, String gender, LocalDate birthday, String department, byte[] img) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -25,8 +26,18 @@ public class Teacher {
         this.gender = gender;
         this.birthday = birthday;
         this.department = department;
+        this.img = img;
     }
 
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
+    }
+
+ 
     public Long getId() {
         return id;
     }

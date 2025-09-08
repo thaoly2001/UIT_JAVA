@@ -1,6 +1,9 @@
 package DAO;
 
 import MODEL.Teacher;
+import Utils.PageResult;
+import java.io.File;
+import java.io.FileInputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +19,35 @@ public class TeacherDAO extends KetNoiCSDL {
         return instance;
     }
 
+    public void insertTeacherWithImage(Teacher teacher, String imagePath) {
+        String sql = "INSERT INTO teachers (name, email, phone, address, gender, img, birthday, department) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"; // đủ 8 ?
+
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); FileInputStream fis = new FileInputStream(new File(imagePath))) {
+
+            ps.setString(1, teacher.getName());
+            ps.setString(2, teacher.getEmail());
+            ps.setString(3, teacher.getPhone());
+            ps.setString(4, teacher.getAddress());
+            ps.setString(5, teacher.getGender());
+            ps.setBinaryStream(6, fis, (int) new File(imagePath).length()); // img
+            ps.setDate(7, new java.sql.Date(System.currentTimeMillis()));   // birthday
+            ps.setString(8, teacher.getDepartment());
+
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Thêm teacher thành công!");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // Thêm giáo viên
     public Teacher insert(Teacher t) {
-        String sql = "INSERT INTO teachers (name, email, phone, address, gender, birthday, department) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO teachers (name, email, phone, address, gender, birthday, department) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -41,14 +70,7 @@ public class TeacherDAO extends KetNoiCSDL {
                         t.setId(rs.getLong(1));
                     }
                 }
-                if (rows > 0) {
-                    try (ResultSet rs = stmt.getGeneratedKeys()) {
-                        if (rs.next()) {
-                            t.setId(rs.getLong(1)); // gán ID tự sinh
-                        }
-                    }
-                    return t;
-                }
+                return t;
             }
 
         } catch (SQLException e) {
@@ -57,9 +79,9 @@ public class TeacherDAO extends KetNoiCSDL {
         return null;
     }
 
-    // Cập nhậtextractTeacherFromResultSet
     public boolean update(Long id, Teacher t) {
-        String sql = "UPDATE teachers SET name = ?, email = ?, phone = ?, address = ?, gender = ?, birthday = ?, department = ? WHERE id = ?";
+        String sql = "UPDATE teachers SET name = ?, email = ?, phone = ?, address = ?, gender = ?, birthday = ?, department = ?, img = ? "
+                + "WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, t.getName());
@@ -75,7 +97,15 @@ public class TeacherDAO extends KetNoiCSDL {
             }
 
             stmt.setString(7, t.getDepartment());
-            stmt.setLong(8, id);
+
+            // Thêm ảnh (BLOB)
+            if (t.getImg() != null) {
+                stmt.setBytes(8, t.getImg());
+            } else {
+                stmt.setNull(8, Types.VARBINARY);
+            }
+
+            stmt.setLong(9, id);
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -98,11 +128,27 @@ public class TeacherDAO extends KetNoiCSDL {
     }
 
     // Tìm theo ID
-    public Teacher findById(long id) {
+    public Teacher findById(Long id) {
         String sql = "SELECT * FROM teachers WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return extractTeacherFromResultSet(rs);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Teacher findByEmail(String email) {
+        String sql = "SELECT * FROM teachers WHERE email = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return extractTeacherFromResultSet(rs);
@@ -129,37 +175,55 @@ public class TeacherDAO extends KetNoiCSDL {
         return list;
     }
 
-    public List<Teacher> searchTeachers(String keyword, int page, int pageSize) {
+    public PageResult<Teacher> search(String keyword, int page, int pageSize) {
         List<Teacher> list = new ArrayList<>();
-        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
+        int totalRecords = 0;
 
-        StringBuilder sql = new StringBuilder("SELECT * FROM teachers");
-        if (hasKeyword) {
-            sql.append(" WHERE name LIKE ? OR email LIKE ?");
-        }
-        sql.append(" ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        String countSql = "SELECT COUNT(*) FROM teachers "
+                + "WHERE (name LIKE ? OR email LIKE ?)  AND is_deleted = 0 ";
 
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-            int paramIndex = 1;
+        String dataSql = "SELECT id, name, email, phone, address, gender, birthday, department, img "
+                + "FROM teachers "
+                + "WHERE (name LIKE ? OR email LIKE ?)  AND is_deleted = 0 "
+                + "ORDER BY id DESC "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
-            if (hasKeyword) {
-                stmt.setString(paramIndex++, "%" + keyword + "%");
-                stmt.setString(paramIndex++, "%" + keyword + "%");
-            }
+        try (Connection conn = getConnection()) {
+            String keywordPattern = "%" + keyword + "%";
 
-            stmt.setInt(paramIndex++, (page - 1) * pageSize);
-            stmt.setInt(paramIndex, pageSize);
+            // 1. Đếm tổng số bản ghi
+            try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
+                stmt.setString(1, keywordPattern);
+                stmt.setString(2, keywordPattern);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    list.add(extractTeacherFromResultSet(rs));
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        totalRecords = rs.getInt(1);
+                    }
                 }
             }
+
+            // 2. Lấy dữ liệu phân trang
+            try (PreparedStatement stmt = conn.prepareStatement(dataSql)) {
+                stmt.setString(1, keywordPattern);
+                stmt.setString(2, keywordPattern);
+
+                int offset = Math.max(page - 1, 0) * pageSize;
+                stmt.setInt(3, offset);
+                stmt.setInt(4, pageSize);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(extractTeacherFromResultSet(rs));
+                    }
+                }
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return list;
+        return new PageResult<>(list, page, pageSize, totalRecords);
     }
 
     private Teacher extractTeacherFromResultSet(ResultSet rs) throws SQLException {
@@ -170,7 +234,7 @@ public class TeacherDAO extends KetNoiCSDL {
         teacher.setPhone(rs.getString("phone"));
         teacher.setAddress(rs.getString("address"));
         teacher.setGender(rs.getString("gender"));
-
+        teacher.setImg(rs.getBytes("gender"));
         Date birthdaySql = rs.getDate("birthday");
         if (birthdaySql != null) {
             teacher.setBirthday(birthdaySql.toLocalDate());
@@ -178,7 +242,9 @@ public class TeacherDAO extends KetNoiCSDL {
             teacher.setBirthday(null);
         }
 
+        teacher.setImg(rs.getBytes("img"));
         teacher.setDepartment(rs.getString("department"));
+
         return teacher;
     }
 

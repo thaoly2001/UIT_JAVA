@@ -5,7 +5,9 @@
 package GUI.admin.popup.search;
 
 import DAO.StudentsDAO;
+import DAO.TeacherDAO;
 import MODEL.Student;
+import MODEL.Teacher;
 import Utils.tableFillingUtils;
 import java.util.List;
 import javax.swing.JTextField;
@@ -18,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
 public class SearchTeacherDialog extends javax.swing.JDialog {
 
     private final JTextField text;
-    private StudentsDAO dao = StudentsDAO.getInstance();
+    private TeacherDAO dao = TeacherDAO.getInstance();
 
     public SearchTeacherDialog(java.awt.Frame parent, boolean modal, JTextField t) {
         super(parent, modal);
@@ -38,7 +40,7 @@ public class SearchTeacherDialog extends javax.swing.JDialog {
         searchBtn = new javax.swing.JButton();
         searchTxt = new javax.swing.JTextField();
         scrollPanel = new javax.swing.JScrollPane();
-        stuTable = new javax.swing.JTable();
+        teacherTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -76,7 +78,7 @@ public class SearchTeacherDialog extends javax.swing.JDialog {
                     .addContainerGap()))
         );
 
-        stuTable.setModel(new javax.swing.table.DefaultTableModel(
+        teacherTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -95,30 +97,31 @@ public class SearchTeacherDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        stuTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        teacherTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                stuTableMouseClicked(evt);
+                teacherTableMouseClicked(evt);
             }
         });
-        scrollPanel.setViewportView(stuTable);
-        if (stuTable.getColumnModel().getColumnCount() > 0) {
-            stuTable.getColumnModel().getColumn(0).setResizable(false);
-            stuTable.getColumnModel().getColumn(1).setResizable(false);
-            stuTable.getColumnModel().getColumn(2).setResizable(false);
-            stuTable.getColumnModel().getColumn(3).setResizable(false);
+        scrollPanel.setViewportView(teacherTable);
+        if (teacherTable.getColumnModel().getColumnCount() > 0) {
+            teacherTable.getColumnModel().getColumn(0).setResizable(false);
+            teacherTable.getColumnModel().getColumn(1).setResizable(false);
+            teacherTable.getColumnModel().getColumn(2).setResizable(false);
+            teacherTable.getColumnModel().getColumn(3).setResizable(false);
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(searchPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(scrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(scrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,8 +129,8 @@ public class SearchTeacherDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(369, Short.MAX_VALUE))
+                .addComponent(scrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -137,20 +140,20 @@ public class SearchTeacherDialog extends javax.swing.JDialog {
 
     }//GEN-LAST:event_formWindowClosed
 
-    private void stuTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stuTableMouseClicked
+    private void teacherTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_teacherTableMouseClicked
         if (evt.getClickCount() == 2 && !evt.isConsumed()) {
             evt.consume();
 
-            int row = stuTable.getSelectedRow();
+            int row = teacherTable.getSelectedRow();
             System.out.println(row);
             if (row != -1) {
-                Long id = (Long) stuTable.getValueAt(row, 0);
-                String name = (String) stuTable.getValueAt(row, 1);
+                Long id = (Long) teacherTable.getValueAt(row, 0);
+                String name = (String) teacherTable.getValueAt(row, 1);
                 text.setText(id + " - " + name);
                 this.dispose();
             }
         }
-    }//GEN-LAST:event_stuTableMouseClicked
+    }//GEN-LAST:event_teacherTableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -161,16 +164,16 @@ public class SearchTeacherDialog extends javax.swing.JDialog {
     private javax.swing.JButton searchBtn;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTextField searchTxt;
-    private javax.swing.JTable stuTable;
+    private javax.swing.JTable teacherTable;
     // End of variables declaration//GEN-END:variables
 
     private void initData() {
-        List<Student> list = dao.getAll();
-        DefaultTableModel model = (DefaultTableModel) stuTable.getModel();
+        List<Teacher> list = dao.findAll();
+        DefaultTableModel model = (DefaultTableModel) teacherTable.getModel();
         model.setRowCount(0);
 
-        for (Student stu : list) {
-            model.addRow(tableFillingUtils.fillStuSearch(stu));
+        for (Teacher stu : list) {
+            model.addRow(tableFillingUtils.fillTeacher(stu));
         }
     }
 

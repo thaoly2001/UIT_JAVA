@@ -4,6 +4,7 @@ import MODEL.Classes;
 import MODEL.Student;
 import MODEL.Subject;
 import MODEL.Teacher;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -102,10 +103,10 @@ public class validationUtils {
         if (student.getBirthday().isAfter(LocalDate.now())) {
             return "Ngày sinh không được lớn hơn ngày hiện tại.";
         }
-        
+
         String validDate = validateDate(student.getBirthday().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        
-        return validDate==null?null:validDate;
+
+        return validDate == null ? null : validDate;
     }
 
     public static String validateDate(String dateStr) {
@@ -119,7 +120,7 @@ public class validationUtils {
             LocalDate date = LocalDate.parse(dateStr, formatter);
 
             if (date.isAfter(LocalDate.now())) {
-                return"Ngày không được lớn hơn ngày hiện tại.";
+                return "Ngày không được lớn hơn ngày hiện tại.";
             }
 
         } catch (DateTimeParseException e) {
@@ -127,25 +128,34 @@ public class validationUtils {
         }
         return null;
     }
-    
+
     public static String validateClasses(Classes cls) {
-    if (cls == null) {
-        return "Lớp học không được null.";
+        if (cls == null) {
+            return "Lớp học không được null.";
+        }
+
+        if (cls.getName() == null || cls.getName().trim().isEmpty()) {
+            return "Tên lớp không được để trống.";
+        }
+
+        if (cls.getSubject() == null) {
+            return "Môn học không được để trống.";
+        }
+
+        if (cls.getTeacher() == null) {
+            return "Giảng viên không được để trống.";
+        }
+
+        return null; // Hợp lệ
     }
 
-    if (cls.getName() == null || cls.getName().trim().isEmpty()) {
-        return "Tên lớp không được để trống.";
+    public static boolean isImageFile(File file) {
+        if (file == null) {
+            return false;
+        }
+        String name = file.getName().toLowerCase();
+        return name.endsWith(".png") || name.endsWith(".jpg")
+                || name.endsWith(".jpeg") || name.endsWith(".gif");
     }
-
-    if (cls.getSubject() == null) {
-        return "Môn học không được để trống.";
-    }
-
-    if (cls.getTeacher() == null) {
-        return "Giảng viên không được để trống.";
-    }
-
-    return null; // Hợp lệ
-}
 
 }

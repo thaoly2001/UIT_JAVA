@@ -26,13 +26,23 @@ public class tableFillingUtils {
             stu.getBirthday()
         };
     }
-   public static Object[] fillStuSearch(Student stu) {
+
+    public static Object[] fillStuSearch(Student stu) {
         return new Object[]{
             stu.getId(),
             stu.getName(),
             stu.getEmail()
         };
     }
+       public static Object[] fillStuSWithScore(Enrollment stu) {
+        return new Object[]{
+            stu.getStudent().getId(),
+            stu.getStudent().getName(),
+            stu.getStudent().getEmail(),
+            stu.getScore()
+        };
+    }
+
     public static Object[] fillTeacher(Teacher te) {
         return new Object[]{
             te.getId(),
@@ -48,23 +58,25 @@ public class tableFillingUtils {
             sub.getId(),
             sub.getName(),
             sub.getCredit(),
-            sub.isIsdeleted()
+            !sub.isStatus()? "Hoạt động" : "Không hoạt động"
         };
     }
-   public static Object[] fillSubSearch(Subject stu) {
+
+    public static Object[] fillSubSearch(Subject stu) {
         return new Object[]{
             stu.getId(),
             stu.getName(),
             stu.getCredit()
         };
     }
+
     public static Object[] fillClasses(Classes classes) {
         return new Object[]{
             classes.getId(),
             classes.getName(),
-            classes.getSubject() != null ? classes.getSubject().getName() : "Không rõ",
+            classes.getSubject()!= null ? classes.getSubject().getName() : "Không rõ",
             classes.getTeacher() != null ? classes.getTeacher().getName() : "Chưa phân công",
-            classes.isDeleted() ? "Đã xóa" : "Còn hoạt động"
+            !classes.isDeleted() ? "Hoạt động" : "Không hoạt động"
         };
     }
 

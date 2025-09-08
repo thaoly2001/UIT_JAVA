@@ -3,6 +3,7 @@ package DAO;
 import MODEL.Classes;
 import MODEL.Subject;
 import MODEL.Teacher;
+import Utils.PageResult;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,7 +20,129 @@ public class ClassesDAO extends KetNoiCSDL {
         return instance;
     }
 
-    // Thêm lớp học
+public PageResult<Classes> search(String keyword, int page, int pageSize) {
+    List<Classes> list = new ArrayList<>();
+    int totalRecords = 0;
+
+    String countSql = "SELECT COUNT(*) "
+            + "FROM classes c "
+            + "JOIN teachers t ON c.teacher_id = t.id "
+            + "JOIN subjects s ON c.subject_id = s.id "
+            + "WHERE (c.name LIKE ? OR t.name LIKE ? OR s.name LIKE ?) AND  c.is_deleted = 0 ";
+
+    String dataSql = "SELECT c.id, c.name, c.subject_id, c.teacher_id, c.is_deleted "
+            + "FROM classes c "
+            + "JOIN teachers t ON c.teacher_id = t.id "
+            + "JOIN subjects s ON c.subject_id = s.id "
+            + "WHERE (c.name LIKE ? OR t.name LIKE ? OR s.name LIKE ?)  AND  c.is_deleted = 0  "
+            + "ORDER BY c.id DESC "
+            + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+    try (Connection conn = getConnection()) {
+        // 1. Đếm tổng số bản ghi
+        try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
+            String keywordPattern = "%" + keyword + "%";
+            stmt.setString(1, keywordPattern);
+            stmt.setString(2, keywordPattern);
+            stmt.setString(3, keywordPattern);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    totalRecords = rs.getInt(1);
+                }
+            }
+        }
+
+        // 2. Lấy dữ liệu phân trang
+        try (PreparedStatement stmt = conn.prepareStatement(dataSql)) {
+            String keywordPattern = "%" + keyword + "%";
+            stmt.setString(1, keywordPattern);
+            stmt.setString(2, keywordPattern);
+            stmt.setString(3, keywordPattern);
+
+            int offset = Math.max(page, 0) * pageSize;
+
+            stmt.setInt(4, offset);
+            stmt.setInt(5, pageSize);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(extractClassFromResultSet(rs));
+                }
+            }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return new PageResult<>(list, page, pageSize, totalRecords);
+}
+public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int page, int pageSize) {
+    List<Classes> list = new ArrayList<>();
+    int totalRecords = 0;
+
+    String countSql = "SELECT COUNT(*) "
+            + "FROM classes c "
+            + "JOIN teachers t ON c.teacher_id = t.id "
+            + "JOIN subjects s ON c.subject_id = s.id "
+            + "WHERE (c.name LIKE ? OR t.name LIKE ? OR s.name LIKE ?) "
+            + "AND c.is_deleted = 0 "
+            + "AND c.teacher_id = ?";
+
+    String dataSql = "SELECT c.id, c.name, c.subject_id, c.teacher_id, c.is_deleted "
+            + "FROM classes c "
+            + "JOIN teachers t ON c.teacher_id = t.id "
+            + "JOIN subjects s ON c.subject_id = s.id "
+            + "WHERE (c.name LIKE ? OR t.name LIKE ? OR s.name LIKE ?) "
+            + "AND c.is_deleted = 0 "
+            + "AND c.teacher_id = ? "
+            + "ORDER BY c.id DESC "
+            + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+    try (Connection conn = getConnection()) {
+        String keywordPattern = "%" + keyword + "%";
+
+        // 1. Đếm tổng số bản ghi
+        try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
+            stmt.setString(1, keywordPattern);
+            stmt.setString(2, keywordPattern);
+            stmt.setString(3, keywordPattern);
+            stmt.setLong(4, teacherId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    totalRecords = rs.getInt(1);
+                }
+            }
+        }
+
+        // 2. Lấy dữ liệu phân trang
+        try (PreparedStatement stmt = conn.prepareStatement(dataSql)) {
+            stmt.setString(1, keywordPattern);
+            stmt.setString(2, keywordPattern);
+            stmt.setString(3, keywordPattern);
+            stmt.setLong(4, teacherId);
+
+            int offset = Math.max(page, 0) * pageSize;
+            stmt.setInt(5, offset);
+            stmt.setInt(6, pageSize);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(extractClassFromResultSet(rs));
+                }
+            }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return new PageResult<>(list, page, pageSize, totalRecords);
+}
+
+
     public Classes insert(Classes cls) {
         String sql = "INSERT INTO classes (name, subject_id, teacher_id, is_deleted) VALUES (?, ?, ?, ?)";
 
@@ -49,7 +172,6 @@ public class ClassesDAO extends KetNoiCSDL {
         return null;
     }
 
-    // Cập nhật lớp học
     public boolean update(Long id, Classes cls) {
         String sql = "UPDATE classes SET name = ?, subject_id = ?, teacher_id = ?, is_deleted = ? WHERE id = ?";
 
@@ -72,7 +194,6 @@ public class ClassesDAO extends KetNoiCSDL {
         return false;
     }
 
-    // Xoá mềm (soft delete)
     public boolean delete(long id) {
         String sql = "UPDATE classes SET is_deleted = 1 WHERE id = ?";
 
@@ -86,12 +207,9 @@ public class ClassesDAO extends KetNoiCSDL {
         return false;
     }
 
-    // Tìm theo ID
     public Classes findById(long id) {
         String sql = "SELECT * FROM classes WHERE id = ?";
-
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -103,13 +221,11 @@ public class ClassesDAO extends KetNoiCSDL {
         return null;
     }
 
-    // Lấy tất cả lớp học (kể cả đã bị xóa mềm)
     public List<Classes> findAll() {
         List<Classes> list = new ArrayList<>();
         String sql = "SELECT * FROM classes";
 
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-
             while (rs.next()) {
                 list.add(extractClassFromResultSet(rs));
             }
@@ -119,7 +235,6 @@ public class ClassesDAO extends KetNoiCSDL {
         return list;
     }
 
-    // Hàm hỗ trợ: trích xuất dữ liệu lớp học từ ResultSet
     private Classes extractClassFromResultSet(ResultSet rs) throws SQLException {
         Long id = rs.getLong("id");
         String name = rs.getString("name");
@@ -127,7 +242,7 @@ public class ClassesDAO extends KetNoiCSDL {
         Long teacherId = rs.getLong("teacher_id");
         boolean isDeleted = rs.getBoolean("is_deleted");
 
-        Subject subject = SubjectDAO.getInstance().findById(subjectId);
+        Subject subject =(subjectId != 0) ? SubjectDAO.getInstance().findById(subjectId) : null;
         Teacher teacher = (teacherId != 0) ? TeacherDAO.getInstance().findById(teacherId) : null;
 
         return new Classes(id, name, subject, teacher, isDeleted);

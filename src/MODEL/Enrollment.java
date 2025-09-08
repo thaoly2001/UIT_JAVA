@@ -14,10 +14,21 @@ import java.util.List;
 public class Enrollment {
     private Long id;
     private Student student;
-    private Subject subject;
-    private Double score;
+    private Classes classes;
+    private double score;
     private LocalDate enrollmentDate;
 
+    public Enrollment() {
+    }
+
+    public Enrollment(Long id, Student student, Classes classes, Double score, LocalDate enrollmentDate) {
+        this.id = id;
+        this.student = student;
+        this.classes = classes;
+        this.score = score;
+        this.enrollmentDate = enrollmentDate;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -34,12 +45,12 @@ public class Enrollment {
         this.student = student;
     }
 
-    public Subject getSubject() {
-        return subject;
+    public Classes getClasses() {
+        return classes;
     }
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
+    public void setClasses(Classes classes) {
+        this.classes = classes;
     }
 
     public Double getScore() {

@@ -205,18 +205,18 @@ public class SubjectsDialog extends javax.swing.JDialog {
         idTxt.setText(sub.getId().toString());
         nameText.setText(sub.getName());
         creditText.setText(String.valueOf(sub.getCredit()));
-        activeCbx.setEnabled(sub.isIsdeleted());
+        activeCbx.setSelected(!sub.isStatus());
     }
 
     private void create() {
-        SubjectDAO.getInstance().insert(getData());
+        Subject obj = SubjectDAO.getInstance().insert(getData());
         JOptionPane.showMessageDialog(this,
                 "Tạo môn học thành công!",
                 "Thông báo",
                 JOptionPane.INFORMATION_MESSAGE
         );
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.insertRow(0, tableFillingUtils.fillSubject(getData()));
+        model.insertRow(0, tableFillingUtils.fillSubject(obj));
     }
 
     private void update() {
@@ -238,7 +238,7 @@ public class SubjectsDialog extends javax.swing.JDialog {
                 idTxt.getText().isEmpty()?null:Long.valueOf(idTxt.getText()),
                 nameText.getText(),
                 creditText.getText().isEmpty()?null:Integer.valueOf(creditText.getText()),
-                activeCbx.isSelected()
+                !activeCbx.isSelected()
         );
     }
 

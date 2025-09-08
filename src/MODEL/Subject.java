@@ -5,6 +5,7 @@ public class Subject {
     private Long id;
     private String name;
     private int credit;
+    private boolean status;
     private boolean isdeleted;
 
     public Subject() {
@@ -14,7 +15,7 @@ public class Subject {
         this.id = id;
         this.name = name;
         this.credit = credit;
-        this.isdeleted = isdeleted;
+        this.status = isdeleted;
     }
 
     public boolean isIsdeleted() {
@@ -23,6 +24,14 @@ public class Subject {
 
     public void setIsdeleted(boolean isdeleted) {
         this.isdeleted = isdeleted;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public void setId(Long id) {

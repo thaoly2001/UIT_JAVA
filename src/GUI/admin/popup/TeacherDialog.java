@@ -6,8 +6,10 @@ package GUI.admin.popup;
 
 import DAO.TeacherDAO;
 import MODEL.Teacher;
+import Utils.ImageUtil;
 import Utils.tableFillingUtils;
 import Utils.validationUtils;
+import java.awt.Dimension;
 import java.time.LocalDate;
 import java.util.Objects;
 import javax.swing.JOptionPane;
@@ -23,6 +25,8 @@ public class TeacherDialog extends javax.swing.JDialog {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TeacherDialog.class.getName());
     private final JTable table;
     private final Long ID;
+    private byte[] blob;
+    public static String imgPath = null;
 
     public TeacherDialog(java.awt.Frame parent, boolean modal, Teacher te, JTable teacherTable) {
         super(parent, modal);
@@ -50,7 +54,7 @@ public class TeacherDialog extends javax.swing.JDialog {
         btnReset = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        imgBtn = new javax.swing.JButton();
         emailText = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -114,7 +118,17 @@ public class TeacherDialog extends javax.swing.JDialog {
 
         jLabel1.setText("Giới Tính:");
 
-        jButton1.setText("Ảnh");
+        imgBtn.setText("Ảnh");
+        imgBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgBtnMouseClicked(evt);
+            }
+        });
+        imgBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imgBtnActionPerformed(evt);
+            }
+        });
 
         emailText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,7 +212,7 @@ public class TeacherDialog extends javax.swing.JDialog {
                         .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(imgBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -207,7 +221,7 @@ public class TeacherDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(imgBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -310,6 +324,17 @@ public class TeacherDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_idTxtActionPerformed
 
+    private void imgBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgBtnActionPerformed
+
+    private void imgBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgBtnMouseClicked
+        byte[] blob = ImageUtil.chooseImageForButton(imgBtn);
+        if (blob != null) {
+            this.blob = blob;
+        }
+    }//GEN-LAST:event_imgBtnMouseClicked
+
     private void fillForm(Teacher teacher) {
         if (teacher == null) {
             return;
@@ -327,10 +352,17 @@ public class TeacherDialog extends javax.swing.JDialog {
         } else {
             birthDayText.setText("");
         }
+        ImageUtil.showImageOnButtonSafe(imgBtn, teacher.getImg());
     }
 
     private void create() {
-        TeacherDAO.getInstance().insert(getData());
+
+        if (imgPath == null) {
+            TeacherDAO.getInstance().insert(getData());
+
+        } else {
+            TeacherDAO.getInstance().insertTeacherWithImage(getData(), imgPath);
+        }
         JOptionPane.showMessageDialog(this,
                 "Tạo giảng viên thành công!",
                 "Thông báo",
@@ -356,14 +388,15 @@ public class TeacherDialog extends javax.swing.JDialog {
     ;
     private Teacher getData() {
         return new Teacher(
-                idTxt.getText().isEmpty()?null:Long.valueOf(idTxt.getText()),
+                idTxt.getText().isEmpty() ? null : Long.valueOf(idTxt.getText()),
                 nameText.getText(),
                 emailText.getText(),
                 phoneText.getText(),
                 addressText.getText(),
                 genderCbx.getSelectedItem().toString(),
                 LocalDate.now(),
-                DepText.getText()
+                DepText.getText(),
+                blob
         );
     }
 
@@ -380,7 +413,7 @@ public class TeacherDialog extends javax.swing.JDialog {
     private javax.swing.JTextField emailText;
     private javax.swing.JComboBox<String> genderCbx;
     private javax.swing.JTextField idTxt;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton imgBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -11,6 +11,7 @@ import GUI.admin.popup.search.SearchSubjectDialog;
 import GUI.admin.popup.search.SearchTeacherDialog;
 import MODEL.Classes;
 import MODEL.Student;
+import Utils.tableFillingUtils;
 import Utils.validationUtils;
 import java.util.Objects;
 import javax.swing.JOptionPane;
@@ -250,13 +251,14 @@ public class ClassesDialog extends javax.swing.JDialog {
 
     private void create() {
         Classes cl = getData();
-        ClassesDAO.getInstance().insert(cl);
+        Classes obj = ClassesDAO.getInstance().insert(cl);
         JOptionPane.showMessageDialog(this,
                 "Tạo lớp học thành công!",
                 "Thông báo",
                 JOptionPane.INFORMATION_MESSAGE
         );
         DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.insertRow(0, tableFillingUtils.fillClasses(obj));
     }
 
     private void update() {

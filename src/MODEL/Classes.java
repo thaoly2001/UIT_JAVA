@@ -3,7 +3,7 @@ package MODEL;
 public class Classes {
     private Long id;
     private String name;
-    private Subject subject;
+   private Subject subject;  
     private Teacher teacher;
     private boolean isDeleted;
 

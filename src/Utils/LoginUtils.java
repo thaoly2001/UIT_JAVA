@@ -17,14 +17,10 @@ public class LoginUtils {
         u = us;
     }
 
-    public static String getUserName() {
-        return u.getUsername();
+    public static Users getUsers() {
+        return u;
     }
 
-    public static Long getId() {
-        return u.getId();
-    }
-    
      public static String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");

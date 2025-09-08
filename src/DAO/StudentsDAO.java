@@ -1,6 +1,7 @@
 package DAO;
 
 import MODEL.Student;
+import Utils.PageResult;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -105,46 +106,54 @@ public class StudentsDAO extends KetNoiCSDL {
         return false;
     }
 
-    public List<Student> searchStudents(String keyword, int page, int pageSize) {
-        List<Student> list = new ArrayList<>();
-        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
+public PageResult<Student> search(String keyword, int page, int pageSize) {
+    List<Student> list = new ArrayList<>();
+    int totalRecords = 0;
 
-        StringBuilder sql = new StringBuilder("SELECT * FROM students");
-        if (hasKeyword) {
-            sql.append(" WHERE name LIKE ? OR email LIKE ?");
-        }
-        sql.append(" ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+    // SQL dùng CTE + window function + phân trang MSSQL
+    String sql = "WITH filtered AS ( " +
+                 "    SELECT id, name, email, phone, address, gender, birthday " +
+                 "    FROM students " +
+                 "    WHERE (name LIKE ? OR email LIKE ?) AND is_deleted = 0 " +
+                 ") " +
+                 "SELECT *, COUNT(*) OVER() AS total_count " +
+                 "FROM filtered " +
+                 "ORDER BY id DESC " +
+                 "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-            int paramIndex = 1;
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            if (hasKeyword) {
-                stmt.setString(paramIndex++, "%" + keyword + "%");
-                stmt.setString(paramIndex++, "%" + keyword + "%");
-            }
+        // Chuẩn hóa keyword
+        String keywordPattern = "%" + keyword + "%";
+        stmt.setString(1, keywordPattern);
+        stmt.setString(2, keywordPattern);
 
-            stmt.setInt(paramIndex++, (page - 1) * pageSize);
-            stmt.setInt(paramIndex, pageSize);
+        // Tính offset
+        int validPageSize = Math.max(pageSize, 1);
+        int offset = Math.max(page - 1, 0) * validPageSize;
+        stmt.setInt(3, offset);
+        stmt.setInt(4, validPageSize);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Student s = new Student();
-                    s.setId(rs.getLong("id"));
-                    s.setName(rs.getString("name"));
-                    s.setEmail(rs.getString("email"));
-                    s.setPhone(rs.getString("phone"));
-                    s.setAddress(rs.getString("address"));
-                    s.setGender(rs.getString("gender"));
-                    s.setBirthday(rs.getDate("birthday").toLocalDate());
-                    list.add(s);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                // Lấy tổng số bản ghi từ dòng đầu tiên
+                if (totalRecords == 0) {
+                    totalRecords = rs.getInt("total_count");
                 }
+                list.add(mapResultSetToStudent(rs));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
-        return list;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        // Có thể log hoặc throw exception tùy nhu cầu
     }
+
+    return new PageResult<>(list, page, pageSize, totalRecords);
+}
+
+
 
     public int countSearchStudents(String keyword) {
         boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
