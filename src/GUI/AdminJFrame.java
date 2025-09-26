@@ -2,8 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.admin;
+package GUI;
 
+import GUI.admin.ClassesPanel;
+import GUI.admin.StatisticsPanel;
+import GUI.admin.StudentPanel;
+import GUI.admin.SubjectsPanel;
+import GUI.admin.TeacherPanel;
 import java.awt.CardLayout;
 import java.awt.Component;
 

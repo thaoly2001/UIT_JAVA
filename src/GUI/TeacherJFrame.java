@@ -2,12 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.admin;
+package GUI;
 
 import Constaint.ActionPaging;
 import Constaint.RoleConstaint;
 import DAO.ClassesDAO;
 import DAO.TeacherDAO;
+import GUI.admin.NoInfoPanel;
 import GUI.teacher.popup.EnrollmentDialog;
 import MODEL.Classes;
 import MODEL.Teacher;
@@ -36,7 +37,6 @@ public class TeacherJFrame extends javax.swing.JFrame {
         initClassesData();
         setLocationRelativeTo(null);
         setResizable(false);
-
     }
 
     private void initTeacherData() {

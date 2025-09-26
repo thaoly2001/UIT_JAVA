@@ -147,7 +147,6 @@ public PageResult<Student> search(String keyword, int page, int pageSize) {
 
     } catch (SQLException e) {
         e.printStackTrace();
-        // Có thể log hoặc throw exception tùy nhu cầu
     }
 
     return new PageResult<>(list, page, pageSize, totalRecords);

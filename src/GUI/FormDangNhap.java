@@ -2,9 +2,6 @@ package GUI;
 
 import Constaint.RoleConstaint;
 import DAO.UsersDAO;
-import GUI.admin.AdminJFrame;
-import GUI.admin.StudentsJFrame;
-import GUI.admin.TeacherJFrame;
 import MODEL.Users;
 import Utils.LoginUtils;
 import Utils.RememberMeManager;
@@ -68,18 +65,14 @@ public class FormDangNhap extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/u.png"))); // NOI18N
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "LOGIN", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 24), new java.awt.Color(255, 51, 51))); // NOI18N
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblUserName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/na.png"))); // NOI18N
         lblUserName.setText("UserName");
-        jPanel2.add(lblUserName, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 110, 30));
 
         txtUSerName.setForeground(new java.awt.Color(102, 0, 102));
-        jPanel2.add(txtUSerName, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 290, 50));
 
         lblPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/p.png"))); // NOI18N
         lblPassword.setText("Password");
-        jPanel2.add(lblPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 100, 30));
 
         btnLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/login.png"))); // NOI18N
         btnLogin.setText("Login");
@@ -88,7 +81,6 @@ public class FormDangNhap extends javax.swing.JFrame {
                 btnLoginActionPerformed(evt);
             }
         });
-        jPanel2.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 210, -1, -1));
 
         btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/iconfinder_Cancel_.png"))); // NOI18N
         btnCancel.setText("Cancel");
@@ -97,7 +89,6 @@ public class FormDangNhap extends javax.swing.JFrame {
                 btnCancelActionPerformed(evt);
             }
         });
-        jPanel2.add(btnCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 210, -1, -1));
 
         rememberChx.setText("Remember me?");
         rememberChx.addActionListener(new java.awt.event.ActionListener() {
@@ -105,7 +96,6 @@ public class FormDangNhap extends javax.swing.JFrame {
                 rememberChxActionPerformed(evt);
             }
         });
-        jPanel2.add(rememberChx, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, -1, -1));
 
         btnSend.setText("Forgot Password?");
         btnSend.addActionListener(new java.awt.event.ActionListener() {
@@ -113,10 +103,8 @@ public class FormDangNhap extends javax.swing.JFrame {
                 btnSendActionPerformed(evt);
             }
         });
-        jPanel2.add(btnSend, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 180, -1, -1));
 
         txtPassword.setBorder(javax.swing.BorderFactory.createTitledBorder("Nhập mật khẩu của bạn"));
-        jPanel2.add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 110, 290, 60));
 
         icon2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/invisible.png"))); // NOI18N
         icon2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -124,7 +112,6 @@ public class FormDangNhap extends javax.swing.JFrame {
                 icon2MousePressed(evt);
             }
         });
-        jPanel2.add(icon2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 130, 40, 22));
 
         icon1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/eye.png"))); // NOI18N
         icon1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -132,7 +119,62 @@ public class FormDangNhap extends javax.swing.JFrame {
                 icon1MousePressed(evt);
             }
         });
-        jPanel2.add(icon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 130, 45, 22));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(txtUSerName, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(icon1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(icon2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(95, 95, 95)
+                .addComponent(rememberChx)
+                .addGap(84, 84, 84)
+                .addComponent(btnSend))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(195, 195, 195)
+                .addComponent(btnLogin)
+                .addGap(14, 14, 14)
+                .addComponent(btnCancel))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUSerName, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(icon1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(icon2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rememberChx)
+                    .addComponent(btnSend))
+                .addGap(7, 7, 7)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnLogin)
+                    .addComponent(btnCancel)))
+        );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -145,7 +187,7 @@ public class FormDangNhap extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -180,6 +222,29 @@ public class FormDangNhap extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void icon1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_icon1MousePressed
+        // TODO add your handling code here:
+        icon2.setVisible(true);
+        icon1.setVisible(false);
+
+        txtPassword.setEchoChar((char) 0);
+    }//GEN-LAST:event_icon1MousePressed
+
+    private void icon2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_icon2MousePressed
+        // TODO add your handling code here:
+        icon1.setVisible(true);
+        icon2.setVisible(false);
+        txtPassword.setEchoChar('*');
+    }//GEN-LAST:event_icon2MousePressed
+
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        new Sendmail().setVisible(true);
+    }//GEN-LAST:event_btnSendActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_btnCancelActionPerformed
+
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String username = txtUSerName.getText();
         String password = txtPassword.getText();
@@ -191,29 +256,25 @@ public class FormDangNhap extends javax.swing.JFrame {
             rememberMe.saveLogin(username, password, rememberChx.isSelected());
             switch (user.getRole()) {
                 case RoleConstaint.ADMIN:
-                    this.dispose();
-                    new LoadingProcess(AdminJFrame.class).setVisible(true);
-                    break;
+                this.dispose();
+                new LoadingProcess(AdminJFrame.class).setVisible(true);
+                break;
                 case RoleConstaint.TEACH:
-                    this.dispose();
-                    new LoadingProcess(TeacherJFrame.class).setVisible(true);
-                    break;
+                this.dispose();
+                new LoadingProcess(TeacherJFrame.class).setVisible(true);
+                break;
                 case RoleConstaint.STUDENT:
-                    this.dispose();
-                    new LoadingProcess(StudentsJFrame.class).setVisible(true);
-                    break;
+                this.dispose();
+                new LoadingProcess(StudentsJFrame.class).setVisible(true);
+                break;
                 default:
-                    JOptionPane.showMessageDialog(this, "Vai trò không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    break;
+                JOptionPane.showMessageDialog(this, "Vai trò không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                break;
             }
             this.dispose();
 
         }
     }//GEN-LAST:event_btnLoginActionPerformed
-
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_btnCancelActionPerformed
 
     private void rememberChxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rememberChxActionPerformed
         // TODO add your handling code here:
@@ -221,27 +282,6 @@ public class FormDangNhap extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Tài khoản của bạn đã được ghi nhớ");
         }
     }//GEN-LAST:event_rememberChxActionPerformed
-
-    private void icon1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_icon1MousePressed
-        // TODO add your handling code here:
-        icon2.setVisible(true);
-        icon1.setVisible(false);
-
-        txtPassword.setEchoChar((char) 0);
-
-    }//GEN-LAST:event_icon1MousePressed
-
-    private void icon2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_icon2MousePressed
-        // TODO add your handling code here:
-        icon1.setVisible(true);
-        icon2.setVisible(false);
-        txtPassword.setEchoChar('*');
-
-    }//GEN-LAST:event_icon2MousePressed
-
-    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
-        new Sendmail().setVisible(true);
-    }//GEN-LAST:event_btnSendActionPerformed
 
     /**
      * @param args the command line arguments

@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author ADMIN
  */
-public class TeacherPanel extends javax.swing.JPanel {
+public class UserPanel extends javax.swing.JPanel {
 
     private TeacherDAO dao = TeacherDAO.getInstance();
     private int currentPage = ActionPaging.defaultPage;
@@ -30,7 +30,7 @@ public class TeacherPanel extends javax.swing.JPanel {
     /**
      * Creates new form EmployeePanel
      */
-    public TeacherPanel() {
+    public UserPanel() {
         initComponents();
         initData();
     }

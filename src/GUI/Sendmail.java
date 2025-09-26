@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package GUI;
+
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -11,12 +12,13 @@ import javax.mail.internet.MimeMessage;
 import javax.swing.JOptionPane;
 import DAO.UsersDAO;
 import MODEL.Users;
+
 /**
  *
  * @author DELL
  */
 public class Sendmail extends javax.swing.JFrame {
-    
+
     UsersDAO userDAO = new UsersDAO();
 
     /**
@@ -149,7 +151,7 @@ public class Sendmail extends javax.swing.JFrame {
             }
         });
     }
-    
+
     void checkInfo() {
         String username = txtUsername.getText();
         String email = txtEmailAddress.getText();
@@ -200,7 +202,7 @@ public class Sendmail extends javax.swing.JFrame {
         }
 
     }
-    
+
     String randomPassword() {
         String newPass = (int) Math.floor(((Math.random() * 899999) + 100000)) + "";
         return newPass;

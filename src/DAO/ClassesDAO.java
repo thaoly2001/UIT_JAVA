@@ -78,6 +78,39 @@ public PageResult<Classes> search(String keyword, int page, int pageSize) {
 
     return new PageResult<>(list, page, pageSize, totalRecords);
 }
+
+public List<Classes> export(String keyword) {
+    List<Classes> list = new ArrayList<>();
+
+    String sql = "SELECT c.id, c.name, c.subject_id, c.teacher_id, c.is_deleted "
+            + "FROM classes c "
+            + "JOIN teachers t ON c.teacher_id = t.id "
+            + "JOIN subjects s ON c.subject_id = s.id "
+            + "WHERE (c.name LIKE ? OR t.name LIKE ? OR s.name LIKE ?) "
+            + "AND c.is_deleted = 0 "
+            + "ORDER BY c.id DESC";
+
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        String keywordPattern = "%" + keyword + "%";
+        stmt.setString(1, keywordPattern);
+        stmt.setString(2, keywordPattern);
+        stmt.setString(3, keywordPattern);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                list.add(extractClassFromResultSet(rs));
+            }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return list;
+}
+
 public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int page, int pageSize) {
     List<Classes> list = new ArrayList<>();
     int totalRecords = 0;
