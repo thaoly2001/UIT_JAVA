@@ -6,6 +6,7 @@ package GUI;
 
 import Constaint.ActionPaging;
 import Constaint.RoleConstaint;
+import Constaint.TitleConstants;
 import DAO.ClassesDAO;
 import DAO.TeacherDAO;
 import GUI.admin.NoInfoPanel;
@@ -37,6 +38,7 @@ public class TeacherJFrame extends javax.swing.JFrame {
         initClassesData();
         setLocationRelativeTo(null);
         setResizable(false);
+        setTitle(TitleConstants.TEACHER_FRAME_TITLE);
     }
 
     private void initTeacherData() {

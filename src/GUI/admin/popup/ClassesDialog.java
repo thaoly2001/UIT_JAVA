@@ -17,6 +17,7 @@ import java.util.Objects;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import Constaint.TitleConstants;
 
 /**
  *
@@ -34,6 +35,7 @@ public class ClassesDialog extends javax.swing.JDialog {
         table = t;
         fillForm(stu);
         ID = Objects.nonNull(stu) ? stu.getId() : null;
+        setTitle(TitleConstants.CLASSES_DIALOG_TITLE);
     }
 
     @SuppressWarnings("unchecked")
@@ -244,7 +246,7 @@ public class ClassesDialog extends javax.swing.JDialog {
             return;
         }
         btnAdd.setText("Sửa");
-        teacherTxt.setText(student.getId().toString());
+        teacherTxt.setText(student.getId()+"");
         nameText.setText(student.getName());
 
     }

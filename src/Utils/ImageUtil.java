@@ -118,7 +118,6 @@ public class ImageUtil {
     if (result == JFileChooser.APPROVE_OPTION) {
         File file = chooser.getSelectedFile();
 
-        // Kiểm tra file ảnh
         if (!validationUtils.isImageFile(file)) {
             JOptionPane.showMessageDialog(null,
                     "File chọn không phải ảnh! Vui lòng chọn file hình (.png, .jpg, .jpeg, .gif).",
@@ -130,7 +129,6 @@ public class ImageUtil {
         try {
             byte[] data = Files.readAllBytes(file.toPath());
 
-            // Hiển thị ảnh ngay trên button
             showImageOnButtonSafe(button, data);
             TeacherDialog.imgPath = file.toPath().toString();
             return data;
@@ -144,7 +142,6 @@ public class ImageUtil {
         }
     }
 
-    // Nếu không chọn file
     button.setIcon(null);
     button.setText("Không có ảnh");
     return null;

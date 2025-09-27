@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import Constaint.TitleConstants;
 import DAO.StudentsDAO;
 import DAO.UsersDAO;
 import MODEL.Student;
@@ -52,10 +53,8 @@ public class QuanLiDiemSV extends javax.swing.JFrame {
      */
     public QuanLiDiemSV() {
         initComponents();
-        this.setLocationRelativeTo(null);
-        setTitle("From Quản Lí Điểm Của Giảng Viên");
-        loadFromGrade();
-        loadDSDiemCao();
+        setLocationRelativeTo(null);
+        setTitle(TitleConstants.QUAN_LI_DIEM_SV_TITLE);
     }
 
     /**

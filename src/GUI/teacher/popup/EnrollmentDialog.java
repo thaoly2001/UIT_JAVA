@@ -2,6 +2,7 @@ package GUI.teacher.popup;
 
 import Constaint.ActionPaging;
 import Constaint.EntityState;
+import Constaint.TitleConstants;
 import DAO.ClassesDAO;
 import DAO.EnrollmentDAO;
 import DAO.StudentsDAO;
@@ -35,6 +36,7 @@ public class EnrollmentDialog extends javax.swing.JDialog {
         initComponents();
         initStudentData();
         initClassesData();
+        setTitle(TitleConstants.TEACHER_ENROLLMENT_DIALOG_TITLE);
     }
 
     private void initStudentData() {

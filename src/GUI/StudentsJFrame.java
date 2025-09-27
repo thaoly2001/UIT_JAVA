@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import Constaint.TitleConstants;
 import DAO.EnrollmentDAO;
 import DAO.StudentsDAO;
 import MODEL.Enrollment;
@@ -21,6 +22,7 @@ public class StudentsJFrame extends javax.swing.JFrame {
         initData();
         setLocationRelativeTo(null);
         setResizable(false);
+        setTitle(TitleConstants.STUDENTS_FRAME_TITLE);
     }
 
     private void initData() {
@@ -49,7 +51,7 @@ public class StudentsJFrame extends javax.swing.JFrame {
         if (stu == null) {
             return;
         }
-        idTxt.setText(stu.getId().toString());
+        idTxt.setText(stu.getId()+"");
         nameText.setText(stu.getName());
         emailTxt.setText(stu.getEmail());
         phoneTxt.setText(stu.getPhone());

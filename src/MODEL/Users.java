@@ -1,26 +1,25 @@
 package MODEL;
 
+import java.time.LocalDate;
+
 public class Users {
     private long id;
     private String username;
     private String password;
     private byte role;
-    private String fullname;
     private String email;
     private boolean isDeleted;
     
     public Users() {
     }
 
-    public Users(String username, String password, byte role, String fullname, String email) {
+    public Users(String username, String password, byte role, String email) {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.fullname = fullname;
         this.email = email;
     }
 
-    // Getters và Setters
     public Long getId() {
         return id;
     }
@@ -53,19 +52,19 @@ public class Users {
         this.role = role;
     }
 
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

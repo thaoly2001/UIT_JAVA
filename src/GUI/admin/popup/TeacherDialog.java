@@ -15,6 +15,7 @@ import java.util.Objects;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import Constaint.TitleConstants;
 
 /**
  *
@@ -34,6 +35,7 @@ public class TeacherDialog extends javax.swing.JDialog {
         table = teacherTable;
         fillForm(te);
         ID = Objects.nonNull(te) ? te.getId() : null;
+        setTitle(TitleConstants.TEACHER_DIALOG_TITLE);
     }
 
     @SuppressWarnings("unchecked")

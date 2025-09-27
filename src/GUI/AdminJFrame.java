@@ -9,8 +9,10 @@ import GUI.admin.StatisticsPanel;
 import GUI.admin.StudentPanel;
 import GUI.admin.SubjectsPanel;
 import GUI.admin.TeacherPanel;
+import GUI.admin.UserPanel;
 import java.awt.CardLayout;
 import java.awt.Component;
+import Constaint.TitleConstants;
 
 public class AdminJFrame extends javax.swing.JFrame {
 
@@ -20,11 +22,13 @@ public class AdminJFrame extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         setResizable(false);
+        setTitle(TitleConstants.ADMIN_FRAME_TITLE);
         mainPanel.add(new StatisticsPanel(), "statistics");
         mainPanel.add(new StudentPanel(), "student");
         mainPanel.add(new TeacherPanel(), "teacher");
         mainPanel.add(new SubjectsPanel(), "subject");
         mainPanel.add(new ClassesPanel(), "classes");
+        mainPanel.add(new UserPanel(), "user");
 
     }
 
@@ -84,6 +88,15 @@ public class AdminJFrame extends javax.swing.JFrame {
             }
         });
 
+        btnMenuUser = new javax.swing.JButton();
+        btnMenuUser.setText("Quản lý Nhân viên");
+        btnMenuUser.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnMenuUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuUserActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout menuPanel1Layout = new javax.swing.GroupLayout(menuPanel1);
         menuPanel1.setLayout(menuPanel1Layout);
         menuPanel1Layout.setHorizontalGroup(
@@ -95,7 +108,8 @@ public class AdminJFrame extends javax.swing.JFrame {
                     .addComponent(btnMenuEmp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnMenuClass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnMenuEnrollment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnMenuEmp1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnMenuEmp1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnMenuUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         menuPanel1Layout.setVerticalGroup(
@@ -111,6 +125,8 @@ public class AdminJFrame extends javax.swing.JFrame {
                 .addComponent(btnMenuClass, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnMenuEnrollment, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMenuUser, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(217, 217, 217))
         );
 
@@ -179,6 +195,11 @@ public class AdminJFrame extends javax.swing.JFrame {
         cl.show(mainPanel, "teacher");
     }//GEN-LAST:event_btnMenuDepActionPerformed
 
+    private void btnMenuUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuUserActionPerformed
+        CardLayout cl = (CardLayout) mainPanel.getLayout();
+        cl.show(mainPanel, "user");
+    }//GEN-LAST:event_btnMenuUserActionPerformed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> new AdminJFrame().setVisible(true));
     }
@@ -189,6 +210,7 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnMenuEmp;
     private javax.swing.JButton btnMenuEmp1;
     private javax.swing.JButton btnMenuEnrollment;
+    private javax.swing.JButton btnMenuUser;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel menuPanel1;
     // End of variables declaration//GEN-END:variables

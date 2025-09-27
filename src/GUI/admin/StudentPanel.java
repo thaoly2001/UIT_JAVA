@@ -39,16 +39,24 @@ public class StudentPanel extends javax.swing.JPanel {
     }
 
     private void initData() {
-        PageResult<Student> data = dao.search(searchTxt.getText().trim(), currentPage, pageSize);
+        PageResult<Student> data = dao.search(searchTxt.getText().trim(), currentPage + 1, pageSize);
         List<Student> list = data.getData();
         DefaultTableModel model = (DefaultTableModel) stdTable.getModel();
         model.setRowCount(0);
         for (Student stu : list) {
             model.addRow(tableFillingUtils.fillStu(stu));
         }
-        totalPage = 10;//data.getTotalPages();
+        totalPage = data.getTotalPages();
 
-        count_assum_label.setText((currentPage + 1) + "/" + totalPage);
+
+        if (totalPage == 0) {
+            currentPage = 0;
+            count_assum_label.setText("0/0");
+        } else {
+            String labelText = (currentPage + 1) + "/" + totalPage;
+
+            count_assum_label.setText(labelText);
+        }
     }
 
     /**
@@ -255,6 +263,7 @@ public class StudentPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        currentPage = 0;
         initData();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -375,3 +384,4 @@ public class StudentPanel extends javax.swing.JPanel {
     private javax.swing.JTable stdTable;
     // End of variables declaration//GEN-END:variables
 }
+

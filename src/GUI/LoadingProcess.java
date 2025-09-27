@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import Constaint.TitleConstants;
 import GUI.QuanLiDiemSV;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +28,7 @@ public class LoadingProcess extends javax.swing.JFrame {
         setUndecorated(true);
         initComponents();
         setLocationRelativeTo(null);
+        setTitle(TitleConstants.LOADING_PROCESS_TITLE);
         startLoading(nextFrameClass);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

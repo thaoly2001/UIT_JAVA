@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package DAO;
 
 import MODEL.Classes;
@@ -48,19 +43,16 @@ public class EnrollmentDAO extends KetNoiCSDL {
                 enrollment.setScore(rs.getDouble("score"));
                 enrollment.setEnrollmentDate(rs.getDate("enrollmentDate").toLocalDate());
 
-                // Student
                 Student student = new Student();
                 student.setId(rs.getLong("s_id"));
                 student.setName(rs.getString("s_name"));
                 student.setEmail(rs.getString("s_email"));
                 enrollment.setStudent(student);
 
-                // Subject
                 Subject subject = new Subject();
                 subject.setId(rs.getLong("sub_id"));
                 subject.setName(rs.getString("sub_name"));
 
-                // Classes
                 Classes classes = new Classes();
                 classes.setId(rs.getLong("c_id"));
                 classes.setName(rs.getString("c_name"));
@@ -107,26 +99,22 @@ public class EnrollmentDAO extends KetNoiCSDL {
                 enrollment.setScore(rs.getDouble("score"));
                 enrollment.setEnrollmentDate(rs.getDate("enrollment_date").toLocalDate());
 
-                // Student
                 Student student = new Student();
                 student.setId(rs.getLong("st_id"));
                 student.setName(rs.getString("st_name"));
                 student.setEmail(rs.getString("st_email"));
                 enrollment.setStudent(student);
 
-                // Teacher
                 Teacher teacher = new Teacher();
                 teacher.setId(rs.getLong("t_id"));
                 teacher.setName(rs.getString("t_name"));
 
-                // Subject
                 Subject subject = new Subject();
                 subject.setId(rs.getLong("sub_id"));
                 subject.setName(rs.getString("sub_name"));
                 subject.setCredit(rs.getInt("credit"));
                 subject.setIsdeleted(rs.getBoolean("is_deleted"));
 
-                // Classes
                 Classes classes = new Classes();
                 classes.setId(rs.getLong("c_id"));
                 classes.setName(rs.getString("c_name"));
@@ -167,21 +155,18 @@ public class EnrollmentDAO extends KetNoiCSDL {
                 enrollment.setScore(rs.getDouble("score"));
                 enrollment.setEnrollmentDate(rs.getDate("enrollment_date").toLocalDate());
 
-                // Student
                 Student student = new Student();
                 student.setId(rs.getLong("s_id"));
                 student.setName(rs.getString("s_name"));
                 student.setEmail(rs.getString("s_email"));
                 enrollment.setStudent(student);
 
-                // Subject
                 Subject subject = new Subject();
                 subject.setId(rs.getLong("sub_id"));
                 subject.setName(rs.getString("sub_name"));
                 subject.setCredit(rs.getInt("credit"));
                 subject.setIsdeleted(rs.getBoolean("is_deleted"));
 
-                // Classes
                 Classes classes = new Classes();
                 classes.setId(rs.getLong("c_id"));
                 classes.setName(rs.getString("c_name"));
@@ -292,7 +277,6 @@ public class EnrollmentDAO extends KetNoiCSDL {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    // Lấy Student
                     Student student = new Student();
                     student.setId(rs.getLong("sid"));
                     student.setName(rs.getString("sname"));
@@ -300,22 +284,19 @@ public class EnrollmentDAO extends KetNoiCSDL {
                     student.setPhone(rs.getString("phone"));
                     student.setAddress(rs.getString("address"));
                     student.setGender(rs.getString("gender"));
-                    student.setBirthday(rs.getDate("birthday").toLocalDate());
+                    student.setBirthday(rs.getDate("birthday"));
 
-                    // Lấy Subject
                     Subject subject = new Subject();
                     subject.setId(rs.getLong("subid"));
                     subject.setName(rs.getString("subname"));
                     subject.setCredit(rs.getInt("credit"));
                     subject.setIsdeleted(rs.getBoolean("sub_deleted"));
 
-                    // Lấy Classes
                     Classes classes = new Classes();
                     classes.setId(rs.getLong("cid"));
                     classes.setName(rs.getString("cname"));
                     classes.setSubject(subject);
 
-                    // Lấy Enrollment
                     Enrollment e = new Enrollment();
                     e.setId(rs.getLong("eid"));
                     e.setStudent(student);
@@ -370,7 +351,7 @@ public class EnrollmentDAO extends KetNoiCSDL {
                 + "VALUES (?, ?, ?, 0)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, enrollment.getStudent().getId());
-            ps.setLong(2, enrollment.getClasses().getId()); // lấy id của lớp
+            ps.setLong(2, enrollment.getClasses().getId());
             ps.setDouble(3, enrollment.getScore());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

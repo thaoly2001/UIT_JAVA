@@ -26,13 +26,18 @@ public class SubjectsPanel extends javax.swing.JPanel {
     private void initData() {
         DefaultTableModel model = (DefaultTableModel) subjectsTable.getModel();
         model.setRowCount(0);
-        PageResult<Subject> data = dao.search(searchTxt.getText().trim(), currentPage, pageSize);
+        PageResult<Subject> data = dao.search(searchTxt.getText().trim(), currentPage + 1, pageSize);
         List<Subject> list = data.getData();
         for (Subject s : data.getData()) {
             model.addRow(tableFillingUtils.fillSubject(s));
         }
         totalPage = data.getTotalPages();
 
+        if (totalPage == 0) {
+            currentPage = 0;
+            count_assum_label.setText("0/0");
+            return;
+        }
         count_assum_label.setText((currentPage + 1) + "/" + totalPage);
     }
 
@@ -322,6 +327,7 @@ public class SubjectsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        currentPage = 0; // Reset currentPage to 0 for new searches
         initData();
     }//GEN-LAST:event_jButton1ActionPerformed
 

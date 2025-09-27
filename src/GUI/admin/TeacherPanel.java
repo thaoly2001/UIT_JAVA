@@ -38,7 +38,7 @@ public class TeacherPanel extends javax.swing.JPanel {
 private void initData() {
     DefaultTableModel model = (DefaultTableModel) teacherTable.getModel();
     model.setRowCount(0);
-    PageResult<Teacher> data = dao.search(searchTxt.getText().trim(), currentPage, pageSize);
+    PageResult<Teacher> data = dao.search(searchTxt.getText().trim(), currentPage + 1, pageSize);
     List<Teacher> list = data.getData();
     for (Teacher t : list) {
         model.addRow(tableFillingUtils.fillTeacher(t));

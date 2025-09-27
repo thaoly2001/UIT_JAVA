@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Utils;
 
 import MODEL.Classes;
@@ -10,10 +6,6 @@ import MODEL.Student;
 import MODEL.Subject;
 import MODEL.Teacher;
 
-/**
- *
- * @author ADMIN
- */
 public class tableFillingUtils {
 
     public static Object[] fillStu(Student stu) {
@@ -80,4 +72,27 @@ public class tableFillingUtils {
         };
     }
 
+    public static Object[] fillUser(MODEL.Users user) {
+        String roleString;
+        switch (user.getRole()) {
+            case 0:
+                roleString = "Quản trị viên";
+                break;
+            case 1:
+                roleString = "Giáo viên";
+                break;
+            case 2:
+                roleString = "Sinh viên";
+                break;
+            default:
+                roleString = "Không xác định";
+                break;
+        }
+        return new Object[]{
+            user.getId(),
+            user.getUsername(),
+            roleString,
+            user.getEmail()
+        };
+    }
 }

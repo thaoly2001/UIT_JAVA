@@ -55,7 +55,7 @@ public class StudentsDAO extends KetNoiCSDL {
             stmt.setString(3, student.getPhone());
             stmt.setString(4, student.getAddress());
             stmt.setString(5, student.getGender());
-            stmt.setDate(6, Date.valueOf(student.getBirthday()));
+            stmt.setDate(6, student.getBirthday());
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -66,7 +66,7 @@ public class StudentsDAO extends KetNoiCSDL {
                 if (rows > 0) {
                     try (ResultSet rs = stmt.getGeneratedKeys()) {
                         if (rs.next()) {
-                            student.setId(rs.getLong(1)); // gán ID tự sinh
+                            student.setId(rs.getLong(1));
                         }
                     }
                     return student;
@@ -86,7 +86,7 @@ public class StudentsDAO extends KetNoiCSDL {
             stmt.setString(3, student.getPhone());
             stmt.setString(4, student.getAddress());
             stmt.setString(5, student.getGender());
-            stmt.setDate(6, Date.valueOf(student.getBirthday()));
+            stmt.setDate(6, student.getBirthday());
             stmt.setLong(7, student.getId());
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
@@ -106,53 +106,50 @@ public class StudentsDAO extends KetNoiCSDL {
         return false;
     }
 
-public PageResult<Student> search(String keyword, int page, int pageSize) {
-    List<Student> list = new ArrayList<>();
-    int totalRecords = 0;
+    public PageResult<Student> search(String keyword, int page, int pageSize) {
+        List<Student> list = new ArrayList<>();
+        int totalRecords = 0;
 
-    // SQL dùng CTE + window function + phân trang MSSQL
-    String sql = "WITH filtered AS ( " +
-                 "    SELECT id, name, email, phone, address, gender, birthday " +
-                 "    FROM students " +
-                 "    WHERE (name LIKE ? OR email LIKE ?) AND is_deleted = 0 " +
-                 ") " +
-                 "SELECT *, COUNT(*) OVER() AS total_count " +
-                 "FROM filtered " +
-                 "ORDER BY id DESC " +
-                 "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "WITH filtered AS ( " +
+                     "    SELECT id, name, email, phone, address, gender, birthday " +
+                     "    FROM students " +
+                     "    WHERE (name LIKE ? OR email LIKE ?) AND is_deleted = 0 " +
+                     ") " +
+                     "SELECT *, COUNT(*) OVER() AS total_count " +
+                     "FROM filtered " +
+                     "ORDER BY id DESC " +
+                     "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
-    try (Connection conn = getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        // Chuẩn hóa keyword
-        String keywordPattern = "%" + keyword + "%";
-        stmt.setString(1, keywordPattern);
-        stmt.setString(2, keywordPattern);
+            String keywordPattern = "%" + keyword + "%";
+            stmt.setString(1, keywordPattern);
+            stmt.setString(2, keywordPattern);
 
-        // Tính offset
-        int validPageSize = Math.max(pageSize, 1);
-        int offset = Math.max(page - 1, 0) * validPageSize;
-        stmt.setInt(3, offset);
-        stmt.setInt(4, validPageSize);
+            int validPageSize = Math.max(pageSize, 1);
+            int offset = Math.max(page - 1, 0) * validPageSize;
+            stmt.setInt(3, offset);
+            stmt.setInt(4, validPageSize);
 
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                // Lấy tổng số bản ghi từ dòng đầu tiên
-                if (totalRecords == 0) {
-                    totalRecords = rs.getInt("total_count");
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    if (totalRecords == 0) {
+                        totalRecords = rs.getInt("total_count");
+                    }
+                    Student student = mapResultSetToStudent(rs);
+                    list.add(student);
                 }
-                list.add(mapResultSetToStudent(rs));
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+
+        return new PageResult<>(list, page, pageSize, totalRecords);
     }
-
-    return new PageResult<>(list, page, pageSize, totalRecords);
-}
-
-
 
     public int countSearchStudents(String keyword) {
         boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
@@ -188,7 +185,7 @@ public PageResult<Student> search(String keyword, int page, int pageSize) {
         s.setPhone(rs.getString("phone"));
         s.setAddress(rs.getString("address"));
         s.setGender(rs.getString("gender"));
-        s.setBirthday(rs.getDate("birthday").toLocalDate());
+        s.setBirthday(java.sql.Date.valueOf(rs.getDate("birthday").toLocalDate()));
         return s;
     }
 }

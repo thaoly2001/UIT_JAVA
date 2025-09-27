@@ -4,10 +4,12 @@
  */
 package GUI.teacher.popup.search;
 
+import Constaint.TitleConstants;
 import DAO.StudentsDAO;
 import MODEL.Student;
 import Utils.validationUtils;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 
@@ -26,6 +28,7 @@ public class StudentDialog extends javax.swing.JDialog {
         fillForm(stu);
         ID = Objects.nonNull(stu) ? stu.getId() : null;
         logger.info("ID:"+ ID);
+        setTitle(TitleConstants.TEACHER_STUDENT_DIALOG_TITLE);
     }
 
     @SuppressWarnings("unchecked")
@@ -269,7 +272,7 @@ public class StudentDialog extends javax.swing.JDialog {
             return;
         }
         btnAdd.setText("Sửa");
-        idTxt.setText(student.getId().toString());
+        idTxt.setText(student.getId()+"");
         nameText.setText(student.getName());
         emailTxt.setText(student.getEmail());
         phoneTxt.setText(student.getPhone());
@@ -295,7 +298,10 @@ public class StudentDialog extends javax.swing.JDialog {
         student.setPhone(phoneTxt.getText());
         student.setAddress(addressTxt.getText());
         student.setGender(genderCbx.getSelectedItem().toString());
-        student.setBirthday(LocalDate.parse(birthdayTxt.getText()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(birthdayTxt.getText(), formatter);
+        student.setBirthday(java.sql.Date.valueOf(localDate));
+
         return student;
     }
 

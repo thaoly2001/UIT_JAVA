@@ -4,11 +4,13 @@
  */
 package GUI.admin.popup;
 
+import Constaint.TitleConstants;
 import DAO.StudentsDAO;
 import MODEL.Student;
 import Utils.tableFillingUtils;
 import Utils.validationUtils;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -30,6 +32,7 @@ public class StudentDialog extends javax.swing.JDialog {
         table = t;
         fillForm(stu);
         ID = Objects.nonNull(stu) ? stu.getId() : null;
+        setTitle(TitleConstants.STUDENT_DIALOG_TITLE);
     }
 
     @SuppressWarnings("unchecked")
@@ -279,7 +282,7 @@ public class StudentDialog extends javax.swing.JDialog {
             return;
         }
         btnAdd.setText("Sửa");
-        idTxt.setText(student.getId().toString());
+        idTxt.setText(student.getId()+"");
         nameText.setText(student.getName());
         emailTxt.setText(student.getEmail());
         phoneTxt.setText(student.getPhone());
@@ -319,7 +322,11 @@ public class StudentDialog extends javax.swing.JDialog {
         student.setPhone(phoneTxt.getText());
         student.setAddress(addressTxt.getText());
         student.setGender(genderCbx.getSelectedItem().toString());
-        student.setBirthday(LocalDate.parse(birthdayTxt.getText()));
+        
+        // Convert LocalDate to java.sql.Date
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(birthdayTxt.getText(), formatter);
+        student.setBirthday(java.sql.Date.valueOf(localDate));
 
         return student;
     }

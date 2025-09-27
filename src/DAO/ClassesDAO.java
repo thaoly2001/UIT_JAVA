@@ -39,7 +39,6 @@ public PageResult<Classes> search(String keyword, int page, int pageSize) {
             + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
     try (Connection conn = getConnection()) {
-        // 1. Đếm tổng số bản ghi
         try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
             String keywordPattern = "%" + keyword + "%";
             stmt.setString(1, keywordPattern);
@@ -53,7 +52,6 @@ public PageResult<Classes> search(String keyword, int page, int pageSize) {
             }
         }
 
-        // 2. Lấy dữ liệu phân trang
         try (PreparedStatement stmt = conn.prepareStatement(dataSql)) {
             String keywordPattern = "%" + keyword + "%";
             stmt.setString(1, keywordPattern);
@@ -136,7 +134,6 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
     try (Connection conn = getConnection()) {
         String keywordPattern = "%" + keyword + "%";
 
-        // 1. Đếm tổng số bản ghi
         try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
             stmt.setString(1, keywordPattern);
             stmt.setString(2, keywordPattern);
@@ -150,7 +147,6 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
             }
         }
 
-        // 2. Lấy dữ liệu phân trang
         try (PreparedStatement stmt = conn.prepareStatement(dataSql)) {
             stmt.setString(1, keywordPattern);
             stmt.setString(2, keywordPattern);

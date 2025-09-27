@@ -15,6 +15,7 @@ import Utils.tableFillingUtils;
 import static java.awt.SystemColor.text;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import Constaint.TitleConstants;
 
 /**
  *
@@ -31,6 +32,7 @@ public class SearchStudnetEnrollmentDialog extends javax.swing.JDialog {
         this.enr = enr;
         initComponents();
         initData();
+        setTitle(TitleConstants.SEARCH_STUDENT_ENROLLMENT_DIALOG_TITLE);
     }
 
     @SuppressWarnings("unchecked")

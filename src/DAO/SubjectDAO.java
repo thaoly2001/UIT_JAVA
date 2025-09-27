@@ -32,7 +32,6 @@ public class SubjectDAO extends KetNoiCSDL {
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (Connection conn = getConnection()) {
-            // 1. Đếm tổng số bản ghi
             try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
                 String keywordPattern = "%" + keyword + "%";
                 stmt.setString(1, keywordPattern);
@@ -44,25 +43,32 @@ public class SubjectDAO extends KetNoiCSDL {
                 }
             }
 
-            // 2. Lấy dữ liệu phân trang
             try (PreparedStatement stmt = conn.prepareStatement(dataSql)) {
                 String keywordPattern = "%" + keyword + "%";
                 stmt.setString(1, keywordPattern);
 
-                int offset = Math.max(page, 0) * pageSize;
+                int offset = Math.max(page - 1, 0) * pageSize;
+
+                System.out.println("  Calculated offset: " + offset);
+                System.out.println("  Page size for data query: " + pageSize);
 
                 stmt.setInt(2, offset);
                 stmt.setInt(3, pageSize);
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
-                        list.add(extractSubjectFromResultSet(rs));
+                        Subject subject = extractSubjectFromResultSet(rs);
+                        list.add(subject);
+                        System.out.println("    Fetched subject ID: " + subject.getId());
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        System.out.println("  Total records found: " + totalRecords);
+        System.out.println("  Subjects in list: " + list.size());
 
         return new PageResult<>(list, page, pageSize, totalRecords);
     }
@@ -150,7 +156,6 @@ public class SubjectDAO extends KetNoiCSDL {
         return list;
     }
 
-    // Lấy danh sách môn học chưa bị xoá
     public List<Subject> findAllNotDeleted() {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT * FROM subjects WHERE is_deleted = 0";
@@ -179,7 +184,6 @@ public class SubjectDAO extends KetNoiCSDL {
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (Connection conn = getConnection()) {
-            // 1. Đếm số bản ghi
             try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
                 String pattern = "%" + keyword + "%";
                 stmt.setString(1, pattern);
@@ -191,7 +195,6 @@ public class SubjectDAO extends KetNoiCSDL {
                 }
             }
 
-            // 2. Lấy dữ liệu phân trang
             try (PreparedStatement stmt = conn.prepareStatement(dataSql)) {
                 String pattern = "%" + keyword + "%";
                 stmt.setString(1, pattern);
@@ -240,14 +243,4 @@ public class SubjectDAO extends KetNoiCSDL {
 
         return 0;
     }
-
-//    // Trích xuất Subject từ ResultSet
-//    private Subject extractSubjectFromResultSet(ResultSet rs) throws SQLException {
-//        Subject subject = new Subject();
-//        subject.setId(rs.getLong("id"));
-//        subject.setName(rs.getString("name"));
-//        subject.setCredit(rs.getInt("credit"));
-//        subject.setIsdeleted(rs.getBoolean("is_deleted"));
-//        return subject;
-//    }
 }

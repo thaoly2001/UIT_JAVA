@@ -8,9 +8,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * DAO cho phần Thống kê (Statistics)
- */
 public class StatisticsDAO extends KetNoiCSDL {
 
     private static StatisticsDAO instance;

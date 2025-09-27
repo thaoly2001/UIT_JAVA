@@ -244,7 +244,7 @@ public class ClassesDialog extends javax.swing.JDialog {
             return;
         }
         btnAdd.setText("Sửa");
-        teacherTxt.setText(student.getId().toString());
+        teacherTxt.setText(student.getId()+"");
         nameText.setText(student.getName());
 
     }

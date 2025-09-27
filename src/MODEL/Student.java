@@ -1,6 +1,7 @@
 package MODEL;
 
 import java.time.LocalDate;
+import java.sql.Date;
 
 public class Student {
 
@@ -9,14 +10,36 @@ public class Student {
     private String email;
     private String phone;
     private String address;
+    private Date birthday;
     private String gender;
-    private LocalDate birthday;
 
-    public Long getId() {
+    public Student(long id, String name, String email, String phone, String address, Date birthday, String gender) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.birthday = birthday;
+        this.gender = gender;
+    }
+
+    public Student(String name, String email, String phone, String address, Date birthday, String gender) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.birthday = birthday;
+        this.gender = gender;
+    }
+
+    public Student() {
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -52,6 +75,14 @@ public class Student {
         this.address = address;
     }
 
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
     public String getGender() {
         return gender;
     }
@@ -60,12 +91,9 @@ public class Student {
         this.gender = gender;
     }
 
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
+    @Override
+    public String toString() {
+        return "Student{" + "id=" + id + ", name=" + name + ", email=" + email + ", phone=" + phone + ", address=" + address + ", birthday=" + birthday + ", gender=" + gender + '}';
     }
 
 }

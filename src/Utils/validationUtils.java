@@ -8,11 +8,8 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.ZoneId;
 
-/**
- *
- * @author ADMIN
- */
 public class validationUtils {
 
     public static String validateTeacher(Teacher te) {
@@ -100,11 +97,11 @@ public class validationUtils {
             return "Ngày sinh không được để trống.";
         }
 
-        if (student.getBirthday().isAfter(LocalDate.now())) {
+        if (student.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isAfter(LocalDate.now())) {
             return "Ngày sinh không được lớn hơn ngày hiện tại.";
         }
 
-        String validDate = validateDate(student.getBirthday().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        String validDate = validateDate(student.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
         return validDate == null ? null : validDate;
     }

@@ -5,11 +5,9 @@
 package GUI.admin;
 
 import Constaint.ActionPaging;
-import DAO.TeacherDAO;
-import GUI.admin.popup.TeacherDialog;
-import MODEL.Classes;
-import MODEL.Subject;
-import MODEL.Teacher;
+import DAO.UsersDAO;
+import GUI.admin.popup.UserDialog;
+import MODEL.Users;
 import Utils.PageResult;
 import Utils.tableFillingUtils;
 import java.util.List;
@@ -22,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class UserPanel extends javax.swing.JPanel {
 
-    private TeacherDAO dao = TeacherDAO.getInstance();
+    private UsersDAO dao = UsersDAO.getInstance();
     private int currentPage = ActionPaging.defaultPage;
     private int pageSize = ActionPaging.defaultPgeSize;
     private int totalPage = ActionPaging.defaultTotalPage;
@@ -36,12 +34,12 @@ public class UserPanel extends javax.swing.JPanel {
     }
 
 private void initData() {
-    DefaultTableModel model = (DefaultTableModel) teacherTable.getModel();
+    DefaultTableModel model = (DefaultTableModel) userTable.getModel();
     model.setRowCount(0);
-    PageResult<Teacher> data = dao.search(searchTxt.getText().trim(), currentPage, pageSize);
-    List<Teacher> list = data.getData();
-    for (Teacher t : list) {
-        model.addRow(tableFillingUtils.fillTeacher(t));
+    PageResult<Users> data = dao.search(searchTxt.getText().trim(), currentPage, pageSize);
+    List<Users> list = data.getData();
+    for (Users u : list) {
+        model.addRow(tableFillingUtils.fillUser(u));
     }
     totalPage = data.getTotalPages();
     count_assum_label.setText((currentPage + 1) + "/" + totalPage);
@@ -57,7 +55,7 @@ private void initData() {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        teacherTable = new javax.swing.JTable();
+        userTable = new javax.swing.JTable();
         btnAdd1 = new javax.swing.JButton();
         btnDelete1 = new javax.swing.JButton();
         btnUpdate1 = new javax.swing.JButton();
@@ -73,32 +71,31 @@ private void initData() {
 
         setPreferredSize(new java.awt.Dimension(661, 486));
 
-        teacherTable.setModel(new javax.swing.table.DefaultTableModel(
+        userTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "ID", "Tên", "Email", "Số điện thoại", "Giới Tính"
+                "Mã", "Tên đăng nhập", "Vai trò", "Email"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(teacherTable);
-        if (teacherTable.getColumnModel().getColumnCount() > 0) {
-            teacherTable.getColumnModel().getColumn(0).setResizable(false);
-            teacherTable.getColumnModel().getColumn(1).setResizable(false);
-            teacherTable.getColumnModel().getColumn(2).setResizable(false);
-            teacherTable.getColumnModel().getColumn(3).setResizable(false);
-            teacherTable.getColumnModel().getColumn(4).setResizable(false);
+        jScrollPane1.setViewportView(userTable);
+        if (userTable.getColumnModel().getColumnCount() > 0) {
+            userTable.getColumnModel().getColumn(0).setResizable(false);
+            userTable.getColumnModel().getColumn(1).setResizable(false);
+            userTable.getColumnModel().getColumn(2).setResizable(false);
+            userTable.getColumnModel().getColumn(3).setResizable(false);
         }
 
         btnAdd1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/save.png"))); // NOI18N
@@ -273,9 +270,9 @@ private void initData() {
             return;
         }
 
-        long id = Long.parseLong(teacherTable.getValueAt(teacherTable.getSelectedRow(), 0).toString());
-        Teacher te = dao.findById(id);
-        openCreateUpdateDialog(te);
+        long id = Long.parseLong(userTable.getValueAt(userTable.getSelectedRow(), 0).toString());
+        Users u = dao.findById(id);
+        openCreateUpdateDialog(u);
     }//GEN-LAST:event_btnUpdate1ActionPerformed
 
     private void btnDelete1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelete1ActionPerformed
@@ -284,12 +281,12 @@ private void initData() {
             return;
         }
 
-        long id = Long.parseLong(teacherTable.getValueAt(teacherTable.getSelectedRow(), 0).toString());
-        Teacher subject = dao.findById(id);
+        long id = Long.parseLong(userTable.getValueAt(userTable.getSelectedRow(), 0).toString());
+        Users user = dao.findById(id);
 
         int confirm = JOptionPane.showConfirmDialog(
             this,
-            "Bạn có chắc chắn muốn xóa giáo viên: " + subject.getName() + "?",
+            "Bạn có chắc chắn muốn xóa người dùng: " + user.getUsername() + "?",
             "Xác nhận xóa",
             JOptionPane.YES_NO_OPTION
         );
@@ -309,7 +306,7 @@ private void initData() {
         openCreateUpdateDialog(null);
     }//GEN-LAST:event_btnAdd1ActionPerformed
     private boolean checkClickedTable() {
-        return teacherTable.getSelectedRow() >= 0;
+        return userTable.getSelectedRow() >= 0;
     }
     private void next() {
         if (currentPage < totalPage - 1) {
@@ -337,8 +334,8 @@ private void initData() {
         }
     }
 
-    private void openCreateUpdateDialog(Teacher te) {
-        TeacherDialog dialog = new TeacherDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, te, teacherTable);
+    private void openCreateUpdateDialog(Users u) {
+        UserDialog dialog = new UserDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, u, userTable);
         dialog.setLocationRelativeTo(this);
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
         @Override
@@ -363,6 +360,6 @@ private void initData() {
     private javax.swing.JButton nextPageBtn;
     private javax.swing.JButton prevPageBtn;
     private javax.swing.JTextField searchTxt;
-    private javax.swing.JTable teacherTable;
+    private javax.swing.JTable userTable;
     // End of variables declaration//GEN-END:variables
 }

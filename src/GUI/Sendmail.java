@@ -12,6 +12,7 @@ import javax.mail.internet.MimeMessage;
 import javax.swing.JOptionPane;
 import DAO.UsersDAO;
 import MODEL.Users;
+import Utils.EmailUtil; // Thêm import này để sử dụng EmailUtil nếu cần, mặc dù logic gửi email đã chuyển sang UsersDAO
 
 /**
  *
@@ -19,7 +20,7 @@ import MODEL.Users;
  */
 public class Sendmail extends javax.swing.JFrame {
 
-    UsersDAO userDAO = new UsersDAO();
+    UsersDAO userDAO = UsersDAO.getInstance(); // Sử dụng getInstance() để lấy thể hiện của UsersDAO
 
     /**
      * Creates new form Sendmail
@@ -155,22 +156,27 @@ public class Sendmail extends javax.swing.JFrame {
     void checkInfo() {
         String username = txtUsername.getText();
         String email = txtEmailAddress.getText();
+
+        if (username.isEmpty() || email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và email!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         Users user = userDAO.login(username, email);
         if (user != null) {
-            String newPass = randomPassword();
-            user.setPassword(newPass); // tao password moi cho user
-            boolean check = userDAO.updatePassword(user);
-            if (check) {
-                sendNewPass(newPass);
+            boolean success = userDAO.forgotPassword(user.getId());
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Mật khẩu mới đã được gửi đến email của bạn!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Reset that bai!!!");
+                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại sau.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Ban da nhap sai username hoac email!!!");
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc email không chính xác!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    // Các hàm sendNewPass và randomPassword không còn cần thiết và sẽ được xóa
     void sendNewPass(String newPass) {
         try {
             Properties p = new Properties();

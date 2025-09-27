@@ -10,6 +10,7 @@ import Utils.tableFillingUtils;
 import java.util.List;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import Constaint.TitleConstants;
 
 /**
  *
@@ -25,6 +26,7 @@ public class SearchStudentDialog extends javax.swing.JDialog {
         initComponents();
         initData();
         text = t;
+        setTitle(TitleConstants.SEARCH_STUDENT_DIALOG_TITLE);
     }
 
     @SuppressWarnings("unchecked")
