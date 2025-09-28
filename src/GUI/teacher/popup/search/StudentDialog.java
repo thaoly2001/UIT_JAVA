@@ -74,6 +74,14 @@ public class StudentDialog extends javax.swing.JDialog {
             }
         });
 
+        btnCancel = new javax.swing.JButton();
+        btnCancel.setText("Hủy");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
+
         nameLabel1.setText("ID:");
 
         idTxt.setEditable(false);
@@ -215,7 +223,9 @@ public class StudentDialog extends javax.swing.JDialog {
                     .addComponent(birthdayTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -238,6 +248,10 @@ public class StudentDialog extends javax.swing.JDialog {
                     JOptionPane.WARNING_MESSAGE
             );
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     private void idTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTxtActionPerformed
         // TODO add your handling code here:
@@ -278,6 +292,7 @@ public class StudentDialog extends javax.swing.JDialog {
         phoneTxt.setText(student.getPhone());
         addressTxt.setText(student.getAddress());
         genderCbx.setSelectedItem(student.getGender());
+        genderCbx.setEnabled(false);
         birthdayTxt.setText(student.getBirthday().toString());
     }
 
@@ -311,6 +326,7 @@ public class StudentDialog extends javax.swing.JDialog {
     private javax.swing.JTextField birthdayTxt;
     private javax.swing.JTextField birthdayTxt1;
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnCancel;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;

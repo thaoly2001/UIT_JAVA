@@ -124,26 +124,29 @@
                           <Component id="txtUSerName" min="-2" pref="290" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
-                          <Component id="lblPassword" min="-2" pref="100" max="-2" attributes="0"/>
-                          <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                          <Component id="txtPassword" min="-2" pref="290" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="icon1" min="-2" pref="45" max="-2" attributes="0"/>
-                              <Component id="icon2" min="-2" pref="40" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="95" pref="95" max="-2" attributes="0"/>
-                          <Component id="rememberChx" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="84" pref="84" max="-2" attributes="0"/>
-                          <Component id="btnSend" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
                           <EmptySpace min="195" pref="195" max="-2" attributes="0"/>
                           <Component id="btnLogin" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="14" pref="14" max="-2" attributes="0"/>
                           <Component id="btnCancel" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
+                          <Component id="lblPassword" min="-2" pref="100" max="-2" attributes="0"/>
+                          <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="rememberChx" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
+                                  <Component id="btnSend" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Component id="txtPassword" min="-2" pref="290" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="icon1" min="-2" pref="45" max="-2" attributes="0"/>
+                                      <Component id="icon2" min="-2" pref="40" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -171,9 +174,9 @@
                               </Group>
                           </Group>
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="rememberChx" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnSend" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="btnSend" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="rememberChx" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">

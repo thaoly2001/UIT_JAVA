@@ -3,7 +3,6 @@ package DAO;
 import MODEL.Student;
 import Utils.PageResult;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +32,41 @@ public class StudentsDAO extends KetNoiCSDL {
         return null;
     }
 
+    public Student findByEmail(String email) {
+        String sql = "SELECT * FROM students WHERE email = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToStudent(rs);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean isEmailExists(String email, Long studentId) {
+        String sql = "SELECT COUNT(*) FROM students WHERE email = ?";
+        if (studentId != null) {
+            sql += " AND id != ?";
+        }
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            if (studentId != null) {
+                stmt.setLong(2, studentId);
+            }
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public List<Student> getAll() {
         List<Student> list = new ArrayList<>();
         String sql = "SELECT * FROM students";
@@ -48,14 +82,19 @@ public class StudentsDAO extends KetNoiCSDL {
     }
 
     public Student insert(Student student) {
-        String sql = "INSERT INTO students (name, email, phone, address, gender, birthday) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        if (isEmailExists(student.getEmail(), null)) {
+            System.out.println("Error: Email already exists.");
+            return null;
+        }
+        String sql = "INSERT INTO students (name, email, phone, address, gender, birthday, img) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, student.getName());
             stmt.setString(2, student.getEmail());
             stmt.setString(3, student.getPhone());
             stmt.setString(4, student.getAddress());
             stmt.setString(5, student.getGender());
             stmt.setDate(6, student.getBirthday());
+            stmt.setBytes(7, student.getImg());
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -63,14 +102,7 @@ public class StudentsDAO extends KetNoiCSDL {
                         student.setId(rs.getLong(1));
                     }
                 }
-                if (rows > 0) {
-                    try (ResultSet rs = stmt.getGeneratedKeys()) {
-                        if (rs.next()) {
-                            student.setId(rs.getLong(1));
-                        }
-                    }
-                    return student;
-                }
+                return student;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,7 +111,11 @@ public class StudentsDAO extends KetNoiCSDL {
     }
 
     public boolean update(Student student) {
-        String sql = "UPDATE students SET name=?, email=?, phone=?, address=?, gender=?, birthday=? WHERE id=?";
+        if (isEmailExists(student.getEmail(), student.getId())) {
+            System.out.println("Error: Email already exists for another student.");
+            return false;
+        }
+        String sql = "UPDATE students SET name=?, email=?, phone=?, address=?, gender=?, birthday=?, img=? WHERE id=?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, student.getName());
             stmt.setString(2, student.getEmail());
@@ -87,7 +123,8 @@ public class StudentsDAO extends KetNoiCSDL {
             stmt.setString(4, student.getAddress());
             stmt.setString(5, student.getGender());
             stmt.setDate(6, student.getBirthday());
-            stmt.setLong(7, student.getId());
+            stmt.setBytes(7, student.getImg());
+            stmt.setLong(8, student.getId());
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,7 +148,7 @@ public class StudentsDAO extends KetNoiCSDL {
         int totalRecords = 0;
 
         String sql = "WITH filtered AS ( " +
-                     "    SELECT id, name, email, phone, address, gender, birthday " +
+                     "    SELECT id, name, email, phone, address, gender, birthday, img " +
                      "    FROM students " +
                      "    WHERE (name LIKE ? OR email LIKE ?) AND is_deleted = 0 " +
                      ") " +
@@ -186,6 +223,7 @@ public class StudentsDAO extends KetNoiCSDL {
         s.setAddress(rs.getString("address"));
         s.setGender(rs.getString("gender"));
         s.setBirthday(java.sql.Date.valueOf(rs.getDate("birthday").toLocalDate()));
+        s.setImg(rs.getBytes("img"));
         return s;
     }
 }

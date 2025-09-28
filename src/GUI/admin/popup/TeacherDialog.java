@@ -4,18 +4,20 @@
  */
 package GUI.admin.popup;
 
+import Constaint.TitleConstants;
 import DAO.TeacherDAO;
 import MODEL.Teacher;
 import Utils.ImageUtil;
 import Utils.tableFillingUtils;
 import Utils.validationUtils;
+import com.toedter.calendar.JDateChooser;
 import java.awt.Dimension;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import Constaint.TitleConstants;
 
 /**
  *
@@ -28,6 +30,7 @@ public class TeacherDialog extends javax.swing.JDialog {
     private final Long ID;
     private byte[] blob;
     public static String imgPath = null;
+    private com.toedter.calendar.JDateChooser birthDayText;
 
     public TeacherDialog(java.awt.Frame parent, boolean modal, Teacher te, JTable teacherTable) {
         super(parent, modal);
@@ -48,10 +51,8 @@ public class TeacherDialog extends javax.swing.JDialog {
         nameLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         nameText = new javax.swing.JTextField();
-        birthDayText = new javax.swing.JTextField();
-        DepText = new javax.swing.JTextField();
+        birthDayText = new com.toedter.calendar.JDateChooser();
         phoneText = new javax.swing.JTextField();
         btnReset = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
@@ -73,38 +74,16 @@ public class TeacherDialog extends javax.swing.JDialog {
 
         jLabel3.setText("Số điện thoại:");
 
-        jLabel4.setText("Bộ môn:");
-
         nameText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nameTextActionPerformed(evt);
             }
         });
 
-        birthDayText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                birthDayTextActionPerformed(evt);
-            }
-        });
+        birthDayText.setDateFormatString("dd-MM-yyyy");
+        ((com.toedter.calendar.JTextFieldDateEditor) birthDayText.getDateEditor()).setEditable(false);
 
-        DepText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DepTextActionPerformed(evt);
-            }
-        });
-
-        phoneText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                phoneTextActionPerformed(evt);
-            }
-        });
-        phoneText.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                phoneTextKeyTyped(evt);
-            }
-        });
-
-        btnReset.setText("Reset");
+        btnReset.setText("Đặt lại");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnResetActionPerformed(evt);
@@ -149,6 +128,7 @@ public class TeacherDialog extends javax.swing.JDialog {
         });
 
         genderCbx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ", "Khác" }));
+        genderCbx.setSelectedItem("Nam");
         genderCbx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 genderCbxActionPerformed(evt);
@@ -177,13 +157,11 @@ public class TeacherDialog extends javax.swing.JDialog {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(phoneText)
-                                    .addComponent(DepText, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                                    .addComponent(birthDayText)))
+                                    .addComponent(birthDayText, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -254,10 +232,6 @@ public class TeacherDialog extends javax.swing.JDialog {
                             .addComponent(phoneText)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(DepText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(genderCbx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -271,14 +245,6 @@ public class TeacherDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_nameTextActionPerformed
 
-    private void birthDayTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_birthDayTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_birthDayTextActionPerformed
-
-    private void DepTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_DepTextActionPerformed
-
     private void phoneTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_phoneTextActionPerformed
@@ -287,8 +253,9 @@ public class TeacherDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnResetActionPerformed
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        String error = validationUtils.validateTeacher(getData());
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {
+        Teacher teacher = getData();
+        String error = validationUtils.validateTeacher(teacher);
         if (error == null) {
             if (Objects.isNull(ID)) {
                 this.create();
@@ -303,6 +270,36 @@ public class TeacherDialog extends javax.swing.JDialog {
                     JOptionPane.WARNING_MESSAGE
             );
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {
+        Teacher teacher = getData();
+        String error = validationUtils.validateTeacher(teacher);
+        if (error == null) {
+            this.update();
+            this.dispose();
+        } else
+            JOptionPane.showMessageDialog(this,
+                    error,
+                    "Thiếu thông tin",
+                    JOptionPane.WARNING_MESSAGE
+            );
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
 
     private void phoneTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneTextKeyTyped
         char c = evt.getKeyChar();
@@ -348,11 +345,10 @@ public class TeacherDialog extends javax.swing.JDialog {
         phoneText.setText(teacher.getPhone());
         addressText.setText(teacher.getAddress());
         genderCbx.setSelectedItem(teacher.getGender());
-        DepText.setText(teacher.getDepartment());
         if (teacher.getBirthday() != null) {
-            birthDayText.setText(teacher.getBirthday().toString()); // YYYY-MM-DD
+            birthDayText.setDate(java.sql.Date.valueOf(teacher.getBirthday().toString()));
         } else {
-            birthDayText.setText("");
+            birthDayText.setDate(null);
         }
         ImageUtil.showImageOnButtonSafe(imgBtn, teacher.getImg());
     }
@@ -389,26 +385,32 @@ public class TeacherDialog extends javax.swing.JDialog {
 
     ;
     private Teacher getData() {
-        return new Teacher(
-                idTxt.getText().isEmpty() ? null : Long.valueOf(idTxt.getText()),
-                nameText.getText(),
-                emailText.getText(),
-                phoneText.getText(),
-                addressText.getText(),
-                genderCbx.getSelectedItem().toString(),
-                LocalDate.now(),
-                DepText.getText(),
-                blob
-        );
+        Teacher teacher = new Teacher();
+        teacher.setId(idTxt.getText().isEmpty() ? null : Long.valueOf(idTxt.getText()));
+        teacher.setName(nameText.getText());
+        teacher.setEmail(emailText.getText());
+        teacher.setPhone(phoneText.getText());
+        teacher.setAddress(addressText.getText());
+        if (birthDayText.getDate() != null) {
+            teacher.setBirthday(new java.sql.Date(birthDayText.getDate().getTime()).toLocalDate());
+        } else {
+            teacher.setBirthday(null);
+        }
+        teacher.setGender(genderCbx.getSelectedItem().toString());
+        teacher.setImg(blob);
+        return teacher;
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField DepText;
     private javax.swing.JTextField addressText;
-    private javax.swing.JTextField birthDayText;
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnFirst;
+    private javax.swing.JButton btnLast;
+    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnPrev;
     private javax.swing.JButton btnReset;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
@@ -425,6 +427,7 @@ public class TeacherDialog extends javax.swing.JDialog {
     private javax.swing.JLabel nameLabel;
     private javax.swing.JLabel nameLabel1;
     private javax.swing.JTextField nameText;
+    private javax.swing.JLabel pageLabel;
     private javax.swing.JTextField phoneText;
     // End of variables declaration//GEN-END:variables
 }

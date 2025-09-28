@@ -18,9 +18,11 @@ import Utils.LoginUtils;
 import Utils.PageResult;
 import Utils.tableFillingUtils;
 import java.awt.BorderLayout;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class TeacherJFrame extends javax.swing.JFrame {
@@ -53,9 +55,19 @@ public class TeacherJFrame extends javax.swing.JFrame {
             mainPanel.revalidate();
             mainPanel.repaint();
         } else {
-            teacher = te;
-            fillFormTeacher();
+                teacher = te;
+                fillFormTeacher();
+            }
         }
+
+    private void setEditTable(boolean check) {
+        nameText.setEditable(check);
+        emailText.setEditable(check);
+        phoneText.setEditable(check);
+        addressText.setEditable(check);
+        birthDayText.setEditable(check);
+        DepText.setEditable(check);
+        genderCbx2.setEnabled(check);
     }
 
     private void initClassesData() {
@@ -275,7 +287,7 @@ public class TeacherJFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(genderCbx2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(155, 155, 155))
+                .addGap(156, 156, 156))
         );
 
         jButton3.setText("Tìm kiếm");
@@ -452,7 +464,7 @@ public class TeacherJFrame extends javax.swing.JFrame {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 465, Short.MAX_VALUE)
+            .addGap(0, 466, Short.MAX_VALUE)
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addContainerGap()
@@ -478,7 +490,7 @@ public class TeacherJFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 477, Short.MAX_VALUE)
+            .addGap(0, 478, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()

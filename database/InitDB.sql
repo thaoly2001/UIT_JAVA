@@ -12,7 +12,6 @@ CREATE TABLE users (
     username NVARCHAR(100) NOT NULL UNIQUE,
     password NVARCHAR(255) NOT NULL,
     role TINYINT,
-    fullname NVARCHAR(255),
     email NVARCHAR(150) NOT NULL UNIQUE,
     is_deleted BIT DEFAULT 0
 );

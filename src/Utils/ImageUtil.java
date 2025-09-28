@@ -147,4 +147,9 @@ public class ImageUtil {
     return null;
 }
 
+    public static void clearImageOnButton(JButton button) {
+        button.setIcon(null);
+        button.setText("Ảnh");
+    }
+
 }

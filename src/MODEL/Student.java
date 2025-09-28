@@ -12,8 +12,9 @@ public class Student {
     private String address;
     private Date birthday;
     private String gender;
+    private byte[] img;
 
-    public Student(long id, String name, String email, String phone, String address, Date birthday, String gender) {
+    public Student(long id, String name, String email, String phone, String address, Date birthday, String gender, byte[] img) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -21,15 +22,17 @@ public class Student {
         this.address = address;
         this.birthday = birthday;
         this.gender = gender;
+        this.img = img;
     }
 
-    public Student(String name, String email, String phone, String address, Date birthday, String gender) {
+    public Student(String name, String email, String phone, String address, Date birthday, String gender, byte[] img) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
         this.birthday = birthday;
         this.gender = gender;
+        this.img = img;
     }
 
     public Student() {
@@ -39,7 +42,7 @@ public class Student {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -89,6 +92,14 @@ public class Student {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
     }
 
     @Override

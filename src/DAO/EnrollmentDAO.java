@@ -5,9 +5,9 @@ import MODEL.Enrollment;
 import MODEL.Student;
 import MODEL.Subject;
 import MODEL.Teacher;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.*;
 
 public class EnrollmentDAO extends KetNoiCSDL {
 
@@ -57,6 +57,63 @@ public class EnrollmentDAO extends KetNoiCSDL {
                 classes.setId(rs.getLong("c_id"));
                 classes.setName(rs.getString("c_name"));
                 classes.setSubject(subject);
+
+                enrollment.setClasses(classes);
+
+                list.add(enrollment);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public List<Enrollment> findByEmail(String email) {
+        List<Enrollment> list = new ArrayList<>();
+        String sql = "SELECT e.id AS e_id, e.score, e.enrollment_date, "
+                + "s.id AS s_id, s.name AS s_name, s.email AS s_email, "
+                + "c.id AS c_id, c.name AS c_name, "
+                + "sub.id AS sub_id, sub.name AS sub_name, "
+                + "t.id AS t_id, t.name AS t_name, t.email AS t_email "
+                + "FROM enrollments e "
+                + "JOIN students s ON e.student_id = s.id "
+                + "JOIN classes c ON e.class_id = c.id "
+                + "JOIN subjects sub ON c.subject_id = sub.id "
+                + "JOIN teachers t ON c.teacher_id = t.id "
+                + "WHERE s.email = ? AND e.is_deleted = 0";
+
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Enrollment enrollment = new Enrollment();
+                enrollment.setId(rs.getLong("e_id"));
+                enrollment.setScore(rs.getDouble("score"));
+                enrollment.setEnrollmentDate(rs.getDate("enrollment_date").toLocalDate());
+
+                Student student = new Student();
+                student.setId(rs.getLong("s_id"));
+                student.setName(rs.getString("s_name"));
+                student.setEmail(rs.getString("s_email"));
+                enrollment.setStudent(student);
+
+                Subject subject = new Subject();
+                subject.setId(rs.getLong("sub_id"));
+                subject.setName(rs.getString("sub_name"));
+
+                Teacher teacher = new Teacher();
+                teacher.setId(rs.getLong("t_id"));
+                teacher.setName(rs.getString("t_name"));
+                teacher.setEmail(rs.getString("t_email"));
+
+                Classes classes = new Classes();
+                classes.setId(rs.getLong("c_id"));
+                classes.setName(rs.getString("c_name"));
+                classes.setSubject(subject);
+                classes.setTeacher(teacher);
 
                 enrollment.setClasses(classes);
 

@@ -37,9 +37,6 @@ public class validationUtils {
         if (te.getBirthday() == null || te.getBirthday().isAfter(java.time.LocalDate.now())) {
             return "Ngày sinh không hợp lệ.";
         }
-        if (te.getDepartment() == null || te.getDepartment().trim().isEmpty()) {
-            return "Khoa/Bộ môn không được để trống.";
-        }
 
         return null; // Hợp lệ
     }
@@ -97,11 +94,11 @@ public class validationUtils {
             return "Ngày sinh không được để trống.";
         }
 
-        if (student.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isAfter(LocalDate.now())) {
+        if (new java.util.Date(student.getBirthday().getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isAfter(LocalDate.now())) {
             return "Ngày sinh không được lớn hơn ngày hiện tại.";
         }
 
-        String validDate = validateDate(student.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        String validDate = validateDate(new java.util.Date(student.getBirthday().getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
         return validDate == null ? null : validDate;
     }

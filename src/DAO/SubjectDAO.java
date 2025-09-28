@@ -49,9 +49,6 @@ public class SubjectDAO extends KetNoiCSDL {
 
                 int offset = Math.max(page - 1, 0) * pageSize;
 
-                System.out.println("  Calculated offset: " + offset);
-                System.out.println("  Page size for data query: " + pageSize);
-
                 stmt.setInt(2, offset);
                 stmt.setInt(3, pageSize);
 
@@ -59,16 +56,12 @@ public class SubjectDAO extends KetNoiCSDL {
                     while (rs.next()) {
                         Subject subject = extractSubjectFromResultSet(rs);
                         list.add(subject);
-                        System.out.println("    Fetched subject ID: " + subject.getId());
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        System.out.println("  Total records found: " + totalRecords);
-        System.out.println("  Subjects in list: " + list.size());
 
         return new PageResult<>(list, page, pageSize, totalRecords);
     }

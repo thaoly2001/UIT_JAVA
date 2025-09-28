@@ -26,8 +26,8 @@ public class StudentsJFrame extends javax.swing.JFrame {
     }
 
     private void initData() {
-        Long studentId = LoginUtils.getUsers().getId();
-        List<Enrollment> enrollments = EnrollmentDAO.getInstance().getByStudentId(studentId);
+        String email = LoginUtils.getUsers().getEmail();
+        List<Enrollment> enrollments = EnrollmentDAO.getInstance().findByEmail(email);
 
         // Tạo model cho JTable enrollTbl
         DefaultTableModel model = new DefaultTableModel();
@@ -47,7 +47,7 @@ public class StudentsJFrame extends javax.swing.JFrame {
 
         enrollTbl.setModel(model);
 
-        Student stu = StudentsDAO.getInstance().findById(studentId);
+        Student stu = StudentsDAO.getInstance().findByEmail(email);
         if (stu == null) {
             return;
         }
@@ -81,7 +81,6 @@ public class StudentsJFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         enrollTbl = new javax.swing.JTable();
         genderTxt = new javax.swing.JTextField();
-        birthdayTxt1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -161,6 +160,7 @@ public class StudentsJFrame extends javax.swing.JFrame {
             }
         });
         enrollTbl.setAutoscrolls(false);
+        enrollTbl.setEnabled(false);
         jScrollPane1.setViewportView(enrollTbl);
 
         genderTxt.setEditable(false);
@@ -246,38 +246,21 @@ public class StudentsJFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        birthdayTxt1.setEditable(false);
-        birthdayTxt1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                birthdayTxt1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(104, 104, 104)
-                .addComponent(birthdayTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(548, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
+                .addContainerGap()
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(236, Short.MAX_VALUE)
-                .addComponent(birthdayTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -307,10 +290,6 @@ public class StudentsJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_birthdayTxtActionPerformed
 
-    private void birthdayTxt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_birthdayTxt1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_birthdayTxt1ActionPerformed
-
     private void genderTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genderTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_genderTxtActionPerformed
@@ -322,7 +301,6 @@ public class StudentsJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField addressTxt;
     private javax.swing.JTextField birthdayTxt;
-    private javax.swing.JTextField birthdayTxt1;
     private javax.swing.JTextField emailTxt;
     private javax.swing.JTable enrollTbl;
     private javax.swing.JTextField genderTxt;

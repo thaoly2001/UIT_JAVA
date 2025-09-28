@@ -3,7 +3,7 @@ package Constaint;
 public class TitleConstants {
     public static final String ADMIN_FRAME_TITLE = "Bảng điều khiển quản trị";
     public static final String CLASSES_DIALOG_TITLE = "Quản lý lớp học";
-    public static final String ENROLLMENT_DIALOG_TITLE = "Quản lý đăng ký";
+    public static final String ENROLLMENT_DIALOG_TITLE = "Quản lý đăng ký lớp học";
     public static final String STUDENT_DIALOG_TITLE = "Quản lý sinh viên";
     public static final String SUBJECTS_DIALOG_TITLE = "Quản lý môn học";
     public static final String TEACHER_DIALOG_TITLE = "Quản lý giáo viên";

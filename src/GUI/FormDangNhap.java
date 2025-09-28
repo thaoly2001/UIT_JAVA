@@ -5,8 +5,11 @@ import DAO.UsersDAO;
 import MODEL.Users;
 import Utils.LoginUtils;
 import Utils.RememberMeManager;
+import java.awt.event.KeyAdapter;
 import java.util.Random;
 import javax.swing.JOptionPane;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class FormDangNhap extends javax.swing.JFrame {
 
@@ -22,6 +25,17 @@ public class FormDangNhap extends javax.swing.JFrame {
         rememberChx.setSelected(!rememberMe.getUsername().isEmpty());
         this.icon2.setVisible(false);
 
+        KeyListener enterKeyListener = new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnLoginActionPerformed(null); 
+                }
+            }
+        };
+
+        txtUSerName.addKeyListener(enterKeyListener);
+        txtPassword.addKeyListener(enterKeyListener);
     }
 
     public String Ma() {
@@ -130,23 +144,24 @@ public class FormDangNhap extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(txtUSerName, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(icon1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(icon2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(95, 95, 95)
-                .addComponent(rememberChx)
-                .addGap(84, 84, 84)
-                .addComponent(btnSend))
-            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(195, 195, 195)
                 .addComponent(btnLogin)
                 .addGap(14, 14, 14)
                 .addComponent(btnCancel))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(rememberChx)
+                        .addGap(64, 64, 64)
+                        .addComponent(btnSend))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(icon1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(icon2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,9 +182,9 @@ public class FormDangNhap extends javax.swing.JFrame {
                             .addComponent(icon1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(icon2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(10, 10, 10)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rememberChx)
-                    .addComponent(btnSend))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSend)
+                    .addComponent(rememberChx))
                 .addGap(7, 7, 7)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnLogin)
