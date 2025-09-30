@@ -5,12 +5,16 @@
 package GUI.admin.popup;
 
 import DAO.UsersDAO;
-import GUI.admin.popup.search.SearchStudentDialog;
-import GUI.admin.popup.search.SearchTeacherDialog;
+import DAO.StudentsDAO;
+import DAO.TeacherDAO;
 import MODEL.Users;
+import MODEL.Student;
+import MODEL.Teacher;
 import Utils.tableFillingUtils;
 import Utils.validationUtils;
 import Constaint.TitleConstants;
+import GUI.admin.popup.search.SearchStudentDialog;
+import GUI.admin.popup.search.SearchTeacherDialog;
 import java.time.LocalDate;
 import java.util.Objects;
 import javax.swing.JOptionPane;
@@ -35,6 +39,7 @@ public class UserDialog extends javax.swing.JDialog {
         fillForm(user);
         ID = Objects.nonNull(user) ? user.getId() : null;
         previousRole = (String) roleComboBox.getSelectedItem();
+        updateEmailFieldState(); // Ensure initial state is set correctly
         setTitle(TitleConstants.USER_MANAGEMENT_TITLE); // Use the constant here
     }
 
@@ -93,6 +98,11 @@ public class UserDialog extends javax.swing.JDialog {
                 emailTxtActionPerformed(evt);
             }
         });
+        emailTxt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                emailTxtMousePressed(evt);
+            }
+        });
 
         nameLabel2.setText("Email");
 
@@ -101,6 +111,11 @@ public class UserDialog extends javax.swing.JDialog {
         roleLabel.setText("Vai trò:");
 
         roleComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quản trị viên", "Giáo viên", "Sinh viên" }));
+        roleComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                roleComboBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -252,10 +267,30 @@ public class UserDialog extends javax.swing.JDialog {
     private Users getData() {
         Users user = new Users();
         user.setId(idTxt.getText().isEmpty() ? null : Long.valueOf(idTxt.getText()));
-        user.setEmail(emailTxt.getText());
+        String selectedRole = (String) roleComboBox.getSelectedItem();
+        String email = emailTxt.getText();
+        if ("Giáo viên".equals(selectedRole)) {
+            int dashIndex = email.indexOf(" - ");
+            if (dashIndex != -1) {
+                Long teacherId = Long.valueOf(email.substring(0, dashIndex));
+                Teacher teacher = TeacherDAO.getInstance().findById(teacherId);
+                if (teacher != null) {
+                    email = teacher.getEmail();
+                }
+            }
+        } else if ("Sinh viên".equals(selectedRole)) {
+            int dashIndex = email.indexOf(" - ");
+            if (dashIndex != -1) {
+                Long studentId = Long.valueOf(email.substring(0, dashIndex));
+                Student student = StudentsDAO.getInstance().findById(studentId);
+                if (student != null) {
+                    email = student.getEmail();
+                }
+            }
+        }
+        user.setEmail(email);
         user.setUsername(usernameTxt.getText());
         user.setRole((byte) roleComboBox.getSelectedIndex());
-//        user.setIsDeleted(isDeletedCheckBox.isSelected());
 
         return user;
     }

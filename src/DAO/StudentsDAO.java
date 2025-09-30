@@ -18,7 +18,7 @@ public class StudentsDAO extends KetNoiCSDL {
     }
 
     public Student findById(Long id) {
-        String sql = "SELECT * FROM students WHERE id = ?";
+        String sql = "SELECT * FROM students WHERE id = ? AND is_deleted = 0";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -33,7 +33,7 @@ public class StudentsDAO extends KetNoiCSDL {
     }
 
     public Student findByEmail(String email) {
-        String sql = "SELECT * FROM students WHERE email = ?";
+        String sql = "SELECT * FROM students WHERE email = ? AND is_deleted = 0";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
@@ -48,7 +48,7 @@ public class StudentsDAO extends KetNoiCSDL {
     }
 
     public boolean isEmailExists(String email, Long studentId) {
-        String sql = "SELECT COUNT(*) FROM students WHERE email = ?";
+        String sql = "SELECT COUNT(*) FROM students WHERE email = ? AND is_deleted = 0";
         if (studentId != null) {
             sql += " AND id != ?";
         }
@@ -69,7 +69,7 @@ public class StudentsDAO extends KetNoiCSDL {
 
     public List<Student> getAll() {
         List<Student> list = new ArrayList<>();
-        String sql = "SELECT * FROM students";
+        String sql = "SELECT * FROM students WHERE is_deleted = 0";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -86,7 +86,7 @@ public class StudentsDAO extends KetNoiCSDL {
             System.out.println("Error: Email already exists.");
             return null;
         }
-        String sql = "INSERT INTO students (name, email, phone, address, gender, birthday, img) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO students (name, email, phone, address, gender, birthday, img, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?, 0)";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, student.getName());
             stmt.setString(2, student.getEmail());
@@ -115,7 +115,7 @@ public class StudentsDAO extends KetNoiCSDL {
             System.out.println("Error: Email already exists for another student.");
             return false;
         }
-        String sql = "UPDATE students SET name=?, email=?, phone=?, address=?, gender=?, birthday=?, img=? WHERE id=?";
+        String sql = "UPDATE students SET name=?, email=?, phone=?, address=?, gender=?, birthday=?, img=? WHERE id=? AND is_deleted = 0";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, student.getName());
             stmt.setString(2, student.getEmail());
@@ -133,7 +133,7 @@ public class StudentsDAO extends KetNoiCSDL {
     }
 
     public boolean delete(Long id) {
-        String sql = "DELETE FROM students WHERE id=?";
+        String sql = "UPDATE students SET is_deleted = 1 WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
             return stmt.executeUpdate() > 0;
@@ -189,29 +189,21 @@ public class StudentsDAO extends KetNoiCSDL {
     }
 
     public int countSearchStudents(String keyword) {
-        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
-
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM students");
-        if (hasKeyword) {
-            sql.append(" WHERE name LIKE ? OR email LIKE ?");
-        }
-
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-            if (hasKeyword) {
-                stmt.setString(1, "%" + keyword + "%");
-                stmt.setString(2, "%" + keyword + "%");
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM students WHERE (name LIKE ? OR email LIKE ? OR phone LIKE ?) AND is_deleted = 0";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            String searchKeyword = "%" + keyword + "%";
+            stmt.setString(1, searchKeyword);
+            stmt.setString(2, searchKeyword);
+            stmt.setString(3, searchKeyword);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
             }
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-            }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return 0;
+        return count;
     }
 
     private Student mapResultSetToStudent(ResultSet rs) throws SQLException {

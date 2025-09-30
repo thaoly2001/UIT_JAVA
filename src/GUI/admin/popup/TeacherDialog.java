@@ -26,16 +26,14 @@ import javax.swing.table.DefaultTableModel;
 public class TeacherDialog extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TeacherDialog.class.getName());
-    private final JTable table;
     private final Long ID;
     private byte[] blob;
     public static String imgPath = null;
     private com.toedter.calendar.JDateChooser birthDayText;
 
-    public TeacherDialog(java.awt.Frame parent, boolean modal, Teacher te, JTable teacherTable) {
+    public TeacherDialog(java.awt.Frame parent, boolean modal, Teacher te) {
         super(parent, modal);
         initComponents();
-        table = teacherTable;
         fillForm(te);
         ID = Objects.nonNull(te) ? te.getId() : null;
         setTitle(TitleConstants.TEACHER_DIALOG_TITLE);
@@ -269,7 +267,7 @@ public class TeacherDialog extends javax.swing.JDialog {
                     "Thiếu thông tin",
                     JOptionPane.WARNING_MESSAGE
             );
-    }//GEN-LAST:event_btnAddActionPerformed
+    }                                      
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {
         Teacher teacher = getData();
@@ -283,7 +281,7 @@ public class TeacherDialog extends javax.swing.JDialog {
                     "Thiếu thông tin",
                     JOptionPane.WARNING_MESSAGE
             );
-    }//GEN-LAST:event_btnAddActionPerformed
+    }                                      
 
     private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
@@ -366,8 +364,6 @@ public class TeacherDialog extends javax.swing.JDialog {
                 "Thông báo",
                 JOptionPane.INFORMATION_MESSAGE
         );
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.insertRow(0, tableFillingUtils.fillTeacher(getData()));
     }
 
     private void update() {
@@ -377,9 +373,6 @@ public class TeacherDialog extends javax.swing.JDialog {
                 "Thông báo",
                 JOptionPane.INFORMATION_MESSAGE
         );
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.removeRow(table.getSelectedRow());
-        model.insertRow(0, tableFillingUtils.fillTeacher(getData()));
 
     }
 

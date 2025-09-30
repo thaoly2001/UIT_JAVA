@@ -158,7 +158,7 @@ public class UsersDAO extends KetNoiCSDL {
     }
 
     public boolean delete(long id) {
-        String sql = "UPDATE Users SET is_deleted = 1 WHERE id = ?";
+        String sql = "DELETE FROM Users WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
             return stmt.executeUpdate() > 0;
@@ -186,6 +186,32 @@ public class UsersDAO extends KetNoiCSDL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return user;
+    }
+
+    public Users findByEmail(String email) {
+        Users user = null;
+        String sql = "SELECT * FROM Users WHERE email = ? AND is_deleted = 0";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                user = mapResultSetToUsers(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    private Users mapResultSetToUsers(ResultSet rs) throws SQLException {
+        Users user = new Users();
+        user.setId(rs.getLong("id"));
+        user.setUsername(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        user.setRole(rs.getByte("role"));
+        user.setEmail(rs.getString("email"));
+        user.setIsDeleted(rs.getBoolean("is_deleted"));
         return user;
     }
 
@@ -232,16 +258,5 @@ public class UsersDAO extends KetNoiCSDL {
             e.printStackTrace();
         }
         return new PageResult<>(list, page, pageSize, totalRecords);
-    }
-
-    private Users mapResultSetToUsers(ResultSet rs) throws SQLException {
-        Users user = new Users();
-        user.setId(rs.getLong("id"));
-        user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password"));
-        user.setRole(rs.getByte("role"));
-        user.setEmail(rs.getString("email"));
-        user.setIsDeleted(rs.getBoolean("is_deleted"));
-        return user;
     }
 }

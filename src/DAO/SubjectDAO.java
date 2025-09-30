@@ -138,7 +138,7 @@ public class SubjectDAO extends KetNoiCSDL {
 
     public List<Subject> findAll() {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM subjects";
+        String sql = "SELECT * FROM subjects WHERE is_deleted = 0";
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 list.add(extractSubjectFromResultSet(rs));

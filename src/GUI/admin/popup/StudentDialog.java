@@ -26,14 +26,12 @@ import com.toedter.calendar.JDateChooser;
 public class StudentDialog extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(StudentDialog.class.getName());
-    private final JTable table;
     private final Long ID;
     private byte[] personalImage;
 
-    public StudentDialog(java.awt.Frame parent, boolean modal, Student stu, JTable t) {
+    public StudentDialog(java.awt.Frame parent, boolean modal, Student stu) {
         super(parent, modal);
         initComponents();
-        table = t;
         fillForm(stu);
         ID = Objects.nonNull(stu) ? stu.getId() : null;
         setTitle(TitleConstants.STUDENT_DIALOG_TITLE);
@@ -330,14 +328,21 @@ public class StudentDialog extends javax.swing.JDialog {
     }
 
     private void create() {
-        StudentsDAO.getInstance().insert(getData());
+        Student student = getData();
+        if (StudentsDAO.getInstance().isEmailExists(student.getEmail(), null)) {
+            JOptionPane.showMessageDialog(this,
+                    "Email đã tồn tại cho một sinh viên khác!",
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        StudentsDAO.getInstance().insert(student);
         JOptionPane.showMessageDialog(this,
                 "Tạo sinh viên thành công!",
                 "Thông báo",
                 JOptionPane.INFORMATION_MESSAGE
         );
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.insertRow(0, tableFillingUtils.fillStu(getData()));
     }
 
     private void update() {
@@ -347,9 +352,6 @@ public class StudentDialog extends javax.swing.JDialog {
                 "Thông báo",
                 JOptionPane.INFORMATION_MESSAGE
         );
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.removeRow(table.getSelectedRow());
-        model.insertRow(0, tableFillingUtils.fillStu(getData()));
     }
 
     private Student getData() {

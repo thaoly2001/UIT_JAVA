@@ -237,7 +237,7 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
     }
 
     public Classes findById(long id) {
-        String sql = "SELECT * FROM classes WHERE id = ?";
+        String sql = "SELECT * FROM classes WHERE id = ? AND is_deleted = 0";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -252,7 +252,7 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
 
     public List<Classes> findAll() {
         List<Classes> list = new ArrayList<>();
-        String sql = "SELECT * FROM classes";
+        String sql = "SELECT * FROM classes WHERE is_deleted = 0";
 
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -262,6 +262,22 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
             e.printStackTrace();
         }
         return list;
+    }
+
+    public List<Classes> findClassesBySubjectName(String subjectName) {
+        List<Classes> classes = new ArrayList<>();
+        String sql = "SELECT c.* FROM classes c JOIN subjects s ON c.subject_id = s.id WHERE s.name = ? AND c.is_deleted = 0";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, subjectName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    classes.add(extractClassFromResultSet(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return classes;
     }
 
     private Classes extractClassFromResultSet(ResultSet rs) throws SQLException {

@@ -329,8 +329,15 @@ public class StudentPanel extends javax.swing.JPanel {
         this.last();
     }//GEN-LAST:event_lastPageBtnActionPerformed
     private void openCreateUpdateDialog(Student stu) {
-        StudentDialog dialog = new StudentDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, stu, stdTable);
+        StudentDialog dialog = new StudentDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, stu);
         dialog.setLocationRelativeTo(this);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                  initData();
+            }
+        });
+
         dialog.setVisible(true);
     }
 

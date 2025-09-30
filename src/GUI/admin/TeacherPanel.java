@@ -338,7 +338,7 @@ private void initData() {
     }
 
     private void openCreateUpdateDialog(Teacher te) {
-        TeacherDialog dialog = new TeacherDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, te, teacherTable);
+        TeacherDialog dialog = new TeacherDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, te);
         dialog.setLocationRelativeTo(this);
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
         @Override

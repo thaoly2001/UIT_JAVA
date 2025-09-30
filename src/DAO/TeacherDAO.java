@@ -114,7 +114,7 @@ public class TeacherDAO extends KetNoiCSDL {
     }
 
     public boolean delete(long id) {
-        String sql = "DELETE FROM teachers WHERE id = ?";
+        String sql = "UPDATE teachers SET is_deleted = 1 WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
@@ -126,7 +126,7 @@ public class TeacherDAO extends KetNoiCSDL {
     }
 
     public Teacher findById(Long id) {
-        String sql = "SELECT * FROM teachers WHERE id = ?";
+        String sql = "SELECT * FROM teachers WHERE id = ? AND is_deleted = 0";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
@@ -142,7 +142,7 @@ public class TeacherDAO extends KetNoiCSDL {
     }
 
     public Teacher findByEmail(String email) {
-        String sql = "SELECT * FROM teachers WHERE email = ?";
+        String sql = "SELECT * FROM teachers WHERE email = ? AND is_deleted = 0";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, email);
@@ -159,7 +159,7 @@ public class TeacherDAO extends KetNoiCSDL {
 
     public List<Teacher> findAll() {
         List<Teacher> list = new ArrayList<>();
-        String sql = "SELECT * FROM teachers";
+        String sql = "SELECT * FROM teachers WHERE is_deleted = 0";
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -218,6 +218,27 @@ public class TeacherDAO extends KetNoiCSDL {
         }
 
         return new PageResult<>(list, page, pageSize, totalRecords);
+    }
+
+    public boolean isEmailExists(String email, Long teacherId) {
+        String sql = "SELECT COUNT(*) FROM teachers WHERE email = ? AND is_deleted = 0";
+        if (teacherId != null) {
+            sql += " AND id != ?";
+        }
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            if (teacherId != null) {
+                stmt.setLong(2, teacherId);
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private Teacher extractTeacherFromResultSet(ResultSet rs) throws SQLException {

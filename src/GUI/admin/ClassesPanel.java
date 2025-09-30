@@ -343,7 +343,18 @@ public class ClassesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_lastPageBtnActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
+        if (!checkClickedTable()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa.");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa lớp học này không?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            long classId = Long.parseLong(enrollTbl.getValueAt(enrollTbl.getSelectedRow(), 0).toString());
+            dao.delete(classId);
+            JOptionPane.showMessageDialog(this, "Xóa lớp học thành công.");
+            initData();
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdate1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdate1ActionPerformed
@@ -355,8 +366,14 @@ public class ClassesPanel extends javax.swing.JPanel {
     }
 
     private void openCreateUpdateDialog(Teacher te) {
-        TeacherDialog dialog = new TeacherDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, te, enrollTbl);
+        TeacherDialog dialog = new TeacherDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, te);
         dialog.setLocationRelativeTo(this);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent e) {
+            initData();
+        }
+        });
         dialog.setVisible(true);
     }
 
