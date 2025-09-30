@@ -28,7 +28,7 @@ public class UsersDAO extends KetNoiCSDL {
     }
 
     public UsersDAO() {
-        super(); 
+        super();
     }
 
     public Users login(String username, String password) {
@@ -53,6 +53,51 @@ public class UsersDAO extends KetNoiCSDL {
             e.printStackTrace();
         }
         return user;
+    }
+
+    public Users findByIdAndPassword(Long userId, String password) {
+        Users user = null;
+        String sql = "SELECT * FROM users WHERE id = ? AND password = ? AND is_deleted = 0";
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, userId);
+            stmt.setString(2, password);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    user = new Users();
+                    user.setId(rs.getLong("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPassword(rs.getString("password"));
+                    user.setRole(rs.getByte("role"));
+                    user.setEmail(rs.getString("email"));
+                    user.setIsDeleted(rs.getBoolean("is_deleted"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user; // null nếu không tìm thấy
+    }
+
+    // 2. Update mật khẩu mới
+    public boolean updatePassword(Long userId, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE id = ? AND is_deleted = 0";
+        boolean updated = false;
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, newPassword);
+            stmt.setLong(2, userId);
+
+            int rows = stmt.executeUpdate();
+            updated = rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return updated;
     }
 
     public boolean forgotPassword(Long id) {
@@ -88,12 +133,12 @@ public class UsersDAO extends KetNoiCSDL {
 
             if (updateStmt.executeUpdate() > 0) {
                 String subject = "Mật khẩu mới của bạn";
-                String content = "Kính gửi " + username + ",\n\n" +
-                                 "Bạn đã yêu cầu đặt lại mật khẩu. Mật khẩu mới của bạn là:\n\n" +
-                                 "Mật khẩu: " + newPassword + "\n\n" +
-                                 "Vui lòng đăng nhập và thay đổi mật khẩu của bạn ngay lập tức để đảm bảo an toàn.\n\n" +
-                                 "Trân trọng,\n" +
-                                 "Hệ thống quản lý";
+                String content = "Kính gửi " + username + ",\n\n"
+                        + "Bạn đã yêu cầu đặt lại mật khẩu. Mật khẩu mới của bạn là:\n\n"
+                        + "Mật khẩu: " + newPassword + "\n\n"
+                        + "Vui lòng đăng nhập và thay đổi mật khẩu của bạn ngay lập tức để đảm bảo an toàn.\n\n"
+                        + "Trân trọng,\n"
+                        + "Hệ thống quản lý";
                 EmailUtil.sendEmail(email, subject, content);
                 return true;
             }
@@ -114,20 +159,20 @@ public class UsersDAO extends KetNoiCSDL {
             user.setPassword(generatedPassword);
 
             stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getPassword()); 
+            stmt.setString(2, user.getPassword());
             stmt.setByte(3, user.getRole());
             stmt.setString(4, user.getEmail());
             stmt.setBoolean(5, user.isIsDeleted());
             if (stmt.executeUpdate() > 0) {
                 String subject = "Mật khẩu tài khoản của bạn";
-                String content = "Kính gửi " + user.getUsername() + ",\n\n" +
-                                 "Tài khoản của bạn đã được tạo thành công.\n" +
-                                 "Dưới đây là thông tin đăng nhập của bạn:\n\n" +
-                                 "Tên đăng nhập: " + user.getUsername() + "\n" +
-                                 "Mật khẩu: " + generatedPassword + "\n\n" + 
-                                 "Vui lòng thay đổi mật khẩu của bạn sau khi đăng nhập lầu để đảm bảo an toàn.\n\n" +
-                                 "Trân trọng,\n" +
-                                 "Hệ thống quản lý";
+                String content = "Kính gửi " + user.getUsername() + ",\n\n"
+                        + "Tài khoản của bạn đã được tạo thành công.\n"
+                        + "Dưới đây là thông tin đăng nhập của bạn:\n\n"
+                        + "Tên đăng nhập: " + user.getUsername() + "\n"
+                        + "Mật khẩu: " + generatedPassword + "\n\n"
+                        + "Vui lòng thay đổi mật khẩu của bạn sau khi đăng nhập lầu để đảm bảo an toàn.\n\n"
+                        + "Trân trọng,\n"
+                        + "Hệ thống quản lý";
                 EmailUtil.sendEmail(user.getEmail(), subject, content);
                 return true;
             }
@@ -219,22 +264,21 @@ public class UsersDAO extends KetNoiCSDL {
         List<Users> list = new ArrayList<>();
         int totalRecords = 0;
 
-        StringBuilder selectSql = new StringBuilder("WITH filtered AS ( "); 
-        selectSql.append("SELECT id, username, password, role, email, is_deleted "); 
-        selectSql.append("FROM users "); 
-        selectSql.append("WHERE is_deleted = 0 "); 
-    
-        if (keyword != null && !keyword.trim().isEmpty()) { 
-            selectSql.append("AND (username LIKE ? OR email LIKE ?) "); 
-        } 
-        selectSql.append(") "); 
+        StringBuilder selectSql = new StringBuilder("WITH filtered AS ( ");
+        selectSql.append("SELECT id, username, password, role, email, is_deleted ");
+        selectSql.append("FROM users ");
+        selectSql.append("WHERE is_deleted = 0 ");
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            selectSql.append("AND (username LIKE ? OR email LIKE ?) ");
+        }
+        selectSql.append(") ");
         selectSql.append("SELECT *, COUNT(*) OVER() AS total_count ");
         selectSql.append("FROM filtered ");
         selectSql.append("ORDER BY id DESC ");
         selectSql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
-        try (Connection conn = getConnection();
-             PreparedStatement selectStmt = conn.prepareStatement(selectSql.toString())) {
+        try (Connection conn = getConnection(); PreparedStatement selectStmt = conn.prepareStatement(selectSql.toString())) {
             int paramIndex = 1;
             if (keyword != null && !keyword.trim().isEmpty()) {
                 String searchKeyword = "%" + keyword.trim() + "%";

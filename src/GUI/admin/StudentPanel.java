@@ -5,6 +5,8 @@
 package GUI.admin;
 
 import Constaint.ActionPaging;
+import Constaint.ExcelHeaderConstants;
+import Constaint.ExportFileName;
 import DAO.StudentsDAO;
 import GUI.admin.popup.StudentDialog;
 import GUI.admin.popup.SubjectsDialog;
@@ -12,6 +14,7 @@ import MODEL.Classes;
 import MODEL.Student;
 import MODEL.Subject;
 import MODEL.Teacher;
+import Utils.ExcelExporter;
 import Utils.PageResult;
 import Utils.tableFillingUtils;
 import java.util.List;
@@ -118,6 +121,8 @@ public class StudentPanel extends javax.swing.JPanel {
         );
 
         btnAdd1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/save.png"))); // NOI18N
+        btnAdd1.setText("Thêm");
+        btnAdd1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnAdd1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAdd1ActionPerformed(evt);
@@ -125,6 +130,8 @@ public class StudentPanel extends javax.swing.JPanel {
         });
 
         btnDelete1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/delete.png"))); // NOI18N
+        btnDelete1.setText("Xóa");
+        btnDelete1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnDelete1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelete1ActionPerformed(evt);
@@ -132,6 +139,7 @@ public class StudentPanel extends javax.swing.JPanel {
         });
 
         btnUpdate1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Update.png"))); // NOI18N
+        btnUpdate1.setText("Sửa");
         btnUpdate1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdate1ActionPerformed(evt);
@@ -140,18 +148,20 @@ public class StudentPanel extends javax.swing.JPanel {
 
         stdTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Tên", "Email", "Số điện thoại", "Giới tính", "Ngày sinh"
+                "ID", "Tên", "Email", "Số điện thoại", "Địa chỉ", "Ngày sinh", "Giới tính"
             }
         ));
+        stdTable.setAutoCreateRowSorter(true);
         jScrollPane1.setViewportView(stdTable);
 
         btnUpdate2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/export.png"))); // NOI18N
+        btnUpdate2.setText("Xuất Excel");
 
         firstPageBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/First.png"))); // NOI18N
         firstPageBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -328,6 +338,11 @@ public class StudentPanel extends javax.swing.JPanel {
     private void lastPageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastPageBtnActionPerformed
         this.last();
     }//GEN-LAST:event_lastPageBtnActionPerformed
+    private void btnUpdate2ActionPerformed(java.awt.event.ActionEvent evt) {
+        List<Student> list = dao.export(searchTxt.getText().trim());
+        ExcelExporter.exportToExcel(ExcelHeaderConstants.STUDENT_HEADERS, list, ExportFileName.STUDENT);
+    }
+
     private void openCreateUpdateDialog(Student stu) {
         StudentDialog dialog = new StudentDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, stu);
         dialog.setLocationRelativeTo(this);

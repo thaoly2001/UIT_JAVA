@@ -4,7 +4,9 @@ public enum ExportFileName {
     CLASSES("DanhSachLopHoc"),
     STUDENT("DanhSachHocSinh"),
     TEACHER("DanhSachGiaoVien"),
-    SUBJECT("DanhSachMonHoc");
+    SUBJECT("DanhSachMonHoc"),
+    STATISTICS_BY_PERFORMANCE("ThongKeTheoHocLuc"),
+    STATISTICS_BY_SUBJECT("ThongKeTheoMonHoc");
 
     private final String fileName;
 

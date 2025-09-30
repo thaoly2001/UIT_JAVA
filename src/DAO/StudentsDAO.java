@@ -206,6 +206,25 @@ public class StudentsDAO extends KetNoiCSDL {
         return count;
     }
 
+    public List<Student> export(String keyword) {
+        List<Student> list = new ArrayList<>();
+        String sql = "SELECT * FROM students WHERE (name LIKE ? OR email LIKE ?) AND is_deleted = 0";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            String keywordPattern = "%" + keyword + "%";
+            stmt.setString(1, keywordPattern);
+            stmt.setString(2, keywordPattern);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Student student = mapResultSetToStudent(rs);
+                    list.add(student);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     private Student mapResultSetToStudent(ResultSet rs) throws SQLException {
         Student s = new Student();
         s.setId(rs.getLong("id"));

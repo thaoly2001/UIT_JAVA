@@ -13,6 +13,9 @@ import MODEL.Teacher;
 import Utils.PageResult;
 import Utils.tableFillingUtils;
 import java.util.List;
+import Constaint.ExcelHeaderConstants;
+import Constaint.ExportFileName;
+import Utils.ExcelExporter;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,6 +36,11 @@ public class TeacherPanel extends javax.swing.JPanel {
     public TeacherPanel() {
         initComponents();
         initData();
+        btnUpdate2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdate2ActionPerformed(evt);
+            }
+        });
     }
 
 private void initData() {
@@ -348,6 +356,17 @@ private void initData() {
     });
 
         dialog.setVisible(true);
+    }
+
+    private void btnUpdate2ActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            List<Teacher> teachers = dao.findAll();
+            ExcelExporter.exportToExcel(ExcelHeaderConstants.TEACHER_HEADERS, teachers, ExportFileName.TEACHER);
+            JOptionPane.showMessageDialog(this, "Xuất Excel thành công!");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi xuất Excel: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd1;

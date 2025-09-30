@@ -18,6 +18,17 @@ import java.awt.BorderLayout;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
+import javax.swing.JButton;
+import Utils.ExcelExporter;
+import Constaint.ExportFileName;
+import java.awt.FlowLayout;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartPanel;
+import javax.swing.table.DefaultTableModel;
+import java.util.Vector;
 
 public class StatisticsPanel extends javax.swing.JPanel {
 
@@ -56,11 +67,11 @@ public class StatisticsPanel extends javax.swing.JPanel {
         classComboBox.addActionListener(e -> refreshTinhTrangChart());
     }
 
-    private ChartPanel createTinhTrangChart() {
+    private JFreeChart createTinhTrangChart() {
         return createTinhTrangChart(null, null);
     }
 
-    private ChartPanel createTinhTrangChart(String subjectName, String className) {
+    private JFreeChart createTinhTrangChart(String subjectName, String className) {
         DefaultPieDataset dataset = new DefaultPieDataset();
 
         Map<String, Integer> data = StatisticsDAO.getInstance().getStudentPerformanceStatistics(subjectName, className);
@@ -84,20 +95,21 @@ public class StatisticsPanel extends javax.swing.JPanel {
                 true, true, false
         );
 
-        return new ChartPanel(chart);
+        return chart;
     }
 
     private void refreshTinhTrangChart() {
         String selectedSubject = (String) subjectComboBox.getSelectedItem();
         String selectedClass = (String) classComboBox.getSelectedItem();
-        JPanel tinhTrangPanel = (JPanel) table.getComponentAt(table.indexOfTab("Theo tình trạng"));
+        JPanel tinhTrangPanel = (JPanel) table.getComponentAt(table.indexOfTab("Theo học lực"));
         tinhTrangPanel.remove(1); // Remove old chart
-        tinhTrangPanel.add(createTinhTrangChart(selectedSubject, selectedClass), BorderLayout.CENTER); // Add new chart
+        ChartPanel chartPanel = new ChartPanel(createTinhTrangChart(selectedSubject, selectedClass));
+        tinhTrangPanel.add(chartPanel, BorderLayout.CENTER); // Add new chart
         tinhTrangPanel.revalidate();
         tinhTrangPanel.repaint();
     }
 
-    private ChartPanel createKetQuaMonChart(int limit, String subjectName) {
+    private JFreeChart createKetQuaMonChart(int limit, String subjectName) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         StatisticsDAO statisticsDAO = StatisticsDAO.getInstance();
         try {
@@ -126,9 +138,10 @@ public class StatisticsPanel extends javax.swing.JPanel {
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
         renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
 
-        return new ChartPanel(chart);
+        return chart;
     }
 
+    @SuppressWarnings("unchecked")
     private void refreshKetQuaMonChart() {
         String selectedTop = (String) topComboBox.getSelectedItem();
         int limit = 0; // 0 for all
@@ -139,8 +152,10 @@ public class StatisticsPanel extends javax.swing.JPanel {
         }
         // Remove existing chart and add new one
         JPanel ketQuaMonPanel = (JPanel) table.getComponentAt(table.indexOfTab("Theo môn học"));
+        // Remove existing chart and add new one
         ketQuaMonPanel.remove(1); // Remove old chart
-        ketQuaMonPanel.add(createKetQuaMonChart(limit, "Tất cả môn học"), BorderLayout.CENTER);
+        ChartPanel chartPanel = new ChartPanel(createKetQuaMonChart(limit, "Tất cả môn học"));
+        ketQuaMonPanel.add(new ChartPanel(createKetQuaMonChart(0, "Tất cả môn học")), BorderLayout.CENTER);
         ketQuaMonPanel.revalidate();
         ketQuaMonPanel.repaint();
     }
@@ -163,23 +178,33 @@ public class StatisticsPanel extends javax.swing.JPanel {
         table.setPreferredSize(new java.awt.Dimension(655, 458));
 
         JPanel tinhTrangPanel = new JPanel(new BorderLayout());
-        JPanel subjectSelectionPanel = new JPanel();
-        subjectSelectionPanel.add(subjectLabel);
-        subjectSelectionPanel.add(subjectComboBox);
-        subjectSelectionPanel.add(classLabel);
-        subjectSelectionPanel.add(classComboBox);
+        JPanel subjectSelectionPanel = new JPanel(new BorderLayout());
+        JPanel subjectLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        subjectLeftPanel.add(subjectLabel);
+        subjectLeftPanel.add(subjectComboBox);
+        subjectLeftPanel.add(classLabel);
+        subjectLeftPanel.add(classComboBox);
+        subjectSelectionPanel.add(subjectLeftPanel, BorderLayout.WEST);
+        JButton exportButtonHocLuc = new JButton("Export to Excel");
+        exportButtonHocLuc.addActionListener(e -> exportToExcelAction());
+        subjectSelectionPanel.add(exportButtonHocLuc, BorderLayout.EAST);
         tinhTrangPanel.add(subjectSelectionPanel, BorderLayout.NORTH);
-        tinhTrangPanel.add(createTinhTrangChart(null, null), BorderLayout.CENTER);
+        tinhTrangPanel.add(new ChartPanel(createTinhTrangChart(null, null)), BorderLayout.CENTER);
 
-        table.add("Theo tình trạng", tinhTrangPanel);
+        table.add("Theo học lực", tinhTrangPanel);
 
         JPanel ketQuaMonPanel = new JPanel(new BorderLayout());
-        JPanel topSelectionPanel = new JPanel();
+        JPanel topSelectionPanel = new JPanel(new BorderLayout());
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         
-        topSelectionPanel.add(topLabel);
-        topSelectionPanel.add(topComboBox);
+        leftPanel.add(topLabel);
+        leftPanel.add(topComboBox);
+        topSelectionPanel.add(leftPanel, BorderLayout.WEST);
+        JButton exportChartButton = new JButton("Export to Excel");
+        exportChartButton.addActionListener(e -> exportToExcelAction());
+        topSelectionPanel.add(exportChartButton, BorderLayout.EAST);
         ketQuaMonPanel.add(topSelectionPanel, BorderLayout.NORTH);
-        ketQuaMonPanel.add(createKetQuaMonChart(0, "Tất cả môn học"), BorderLayout.CENTER);
+        ketQuaMonPanel.add(new ChartPanel(createKetQuaMonChart(0, "Tất cả môn học")), BorderLayout.CENTER);
 
         table.add("Theo môn học", ketQuaMonPanel);
 
@@ -210,6 +235,87 @@ public class StatisticsPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+
+    private void exportToExcelAction() {
+        int selectedTabIndex = table.getSelectedIndex();
+        JFreeChart chartToExport = null;
+        String fileName = "ThongKe";
+        byte[] chartImageBytes = null;
+
+        if (selectedTabIndex == 0) { // "Theo học lực" tab
+            String selectedSubject = (String) subjectComboBox.getSelectedItem();
+            String selectedClass = (String) classComboBox.getSelectedItem();
+            chartToExport = createTinhTrangChart(selectedSubject, selectedClass);
+            fileName = "ThongKeTheoHocLuc";
+
+            // Convert chart to image
+            chartImageBytes = convertChartToImage(chartToExport, 800, 600);
+
+            // Fetch data for "Theo học lực" tab
+            Map<String, Integer> performanceData = StatisticsDAO.getInstance().getStudentPerformanceStatistics(selectedSubject, selectedClass);
+            Vector<String> columnNames = new Vector<>();
+            columnNames.add("Tình trạng");
+            columnNames.add("Số lượng sinh viên");
+            DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+
+            for (Map.Entry<String, Integer> entry : performanceData.entrySet()) {
+                Vector<Object> row = new Vector<>();
+                row.add(entry.getKey());
+                row.add(entry.getValue());
+                tableModel.addRow(row);
+            }
+            
+            // Pass the actual table model and data to ExcelExporter
+            ExcelExporter.exportToExcel(new javax.swing.JTable(tableModel),
+                    ExportFileName.STATISTICS_BY_PERFORMANCE,
+                    chartImageBytes, 0, 3);
+
+        } else if (selectedTabIndex == 1) { // "Theo môn học" tab
+            String selectedTop = (String) topComboBox.getSelectedItem();
+            int limit = 0;
+            if ("5".equals(selectedTop)) {
+                limit = 5;
+            } else if ("10".equals(selectedTop)) {
+                limit = 10;
+            }
+            chartToExport = createKetQuaMonChart(limit, "Tất cả môn học");
+            fileName = "ThongKeTheoMonHoc";
+
+            // Convert chart to image
+            chartImageBytes = convertChartToImage(chartToExport, 800, 600);
+
+            // Fetch data for "Theo môn học" tab
+            List<Map<String, Object>> subjectResults = StatisticsDAO.getInstance().getSubjectResultStatistics(limit, "Tất cả môn học");
+            Vector<String> columnNames = new Vector<>();
+            columnNames.add("Môn học");
+            columnNames.add("Số lượng sinh viên");
+            DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+
+            for (Map<String, Object> result : subjectResults) {
+                Vector<Object> row = new Vector<>();
+                row.add(result.get("subjectName"));
+                row.add(result.get("studentCount"));
+                tableModel.addRow(row);
+            }
+
+            // Pass the actual table model and data to ExcelExporter
+            ExcelExporter.exportToExcel(new javax.swing.JTable(tableModel), 
+                    ExportFileName.STATISTICS_BY_SUBJECT,
+                    chartImageBytes, 0, 3);
+        }
+    }
+
+    private byte[] convertChartToImage(JFreeChart chart, int width, int height) {
+        try {
+            BufferedImage chartImage = chart.createBufferedImage(width, height);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ChartUtilities.writeBufferedImageAsPNG(baos, chartImage);
+            return baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane table;

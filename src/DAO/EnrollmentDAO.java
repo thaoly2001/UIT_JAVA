@@ -431,7 +431,20 @@ public class EnrollmentDAO extends KetNoiCSDL {
         }
         return false;
     }
-
+public boolean updateByStudentAndClass(long studentId, long classId, double score) {
+    String sql = "UPDATE enrollments "
+               + "SET score=? "
+               + "WHERE student_id=? AND class_id=? AND is_deleted=0";
+    try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setDouble(1, score);
+        ps.setLong(2, studentId);
+        ps.setLong(3, classId);
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
     public boolean softDelete(Long id) {
         String sql = "UPDATE enrollments SET is_deleted=1 WHERE id=?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {

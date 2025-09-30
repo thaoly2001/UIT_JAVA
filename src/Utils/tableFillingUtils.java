@@ -14,9 +14,9 @@ public class tableFillingUtils {
             stu.getName(),
             stu.getEmail(),
             stu.getPhone(),
-            stu.getGender(),
-            stu.getBirthday()
-        };
+            stu.getAddress(),
+            stu.getBirthday(),
+            stu.getGender(),};
     }
 
     public static Object[] fillStuSearch(Student stu) {
@@ -26,7 +26,8 @@ public class tableFillingUtils {
             stu.getEmail()
         };
     }
-       public static Object[] fillStuSWithScore(Enrollment stu) {
+
+    public static Object[] fillStuSWithScore(Enrollment stu) {
         return new Object[]{
             stu.getStudent().getId(),
             stu.getStudent().getName(),
@@ -50,7 +51,7 @@ public class tableFillingUtils {
             sub.getId(),
             sub.getName(),
             sub.getCredit(),
-            !sub.isStatus()? "Hoạt động" : "Không hoạt động"
+            !sub.isStatus() ? "Hoạt động" : "Không hoạt động"
         };
     }
 
@@ -66,10 +67,8 @@ public class tableFillingUtils {
         return new Object[]{
             classes.getId(),
             classes.getName(),
-            classes.getSubject()!= null ? classes.getSubject().getName() : "Không rõ",
-            classes.getTeacher() != null ? classes.getTeacher().getName() : "Chưa phân công",
-            !classes.isDeleted() ? "Hoạt động" : "Không hoạt động"
-        };
+            classes.getSubject() != null ? classes.getSubject().getName() : "Không rõ",
+            classes.getTeacher() != null ? classes.getTeacher().getName() : "Chưa phân công",};
     }
 
     public static Object[] fillUser(MODEL.Users user) {

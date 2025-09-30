@@ -3,19 +3,17 @@ package MODEL;
 public class Classes {
     private Long id;
     private String name;
-   private Subject subject;  
+    private Subject subject;
     private Teacher teacher;
-    private boolean isDeleted;
 
     public Classes() {
     }
 
-    public Classes(Long id, String name, Subject subject, Teacher teacher, boolean isDeleted) {
+    public Classes(Long id, String name, Subject subject, Teacher teacher) {
         this.id = id;
         this.name = name;
         this.subject = subject;
         this.teacher = teacher;
-        this.isDeleted = isDeleted;
     }
 
     public Long getId() {
@@ -48,14 +46,6 @@ public class Classes {
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 
     @Override

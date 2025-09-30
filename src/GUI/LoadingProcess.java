@@ -6,12 +6,9 @@
 package GUI;
 
 import Constaint.TitleConstants;
-import GUI.QuanLiDiemSV;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 

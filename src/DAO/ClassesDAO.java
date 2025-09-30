@@ -77,37 +77,37 @@ public PageResult<Classes> search(String keyword, int page, int pageSize) {
     return new PageResult<>(list, page, pageSize, totalRecords);
 }
 
-public List<Classes> export(String keyword) {
-    List<Classes> list = new ArrayList<>();
+    public List<Classes> export(String keyword) {
+        List<Classes> list = new ArrayList<>();
 
     String sql = "SELECT c.id, c.name, c.subject_id, c.teacher_id, c.is_deleted "
-            + "FROM classes c "
-            + "JOIN teachers t ON c.teacher_id = t.id "
-            + "JOIN subjects s ON c.subject_id = s.id "
-            + "WHERE (c.name LIKE ? OR t.name LIKE ? OR s.name LIKE ?) "
-            + "AND c.is_deleted = 0 "
-            + "ORDER BY c.id DESC";
+                + "FROM classes c "
+                + "JOIN teachers t ON c.teacher_id = t.id "
+                + "JOIN subjects s ON c.subject_id = s.id "
+                + "WHERE (c.name LIKE ? OR t.name LIKE ? OR s.name LIKE ?) "
+                + "AND c.is_deleted = 0 "
+                + "ORDER BY c.id DESC";
 
-    try (Connection conn = getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        String keywordPattern = "%" + keyword + "%";
-        stmt.setString(1, keywordPattern);
-        stmt.setString(2, keywordPattern);
-        stmt.setString(3, keywordPattern);
+            String keywordPattern = "%" + keyword + "%";
+            stmt.setString(1, keywordPattern);
+            stmt.setString(2, keywordPattern);
+            stmt.setString(3, keywordPattern);
 
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                list.add(extractClassFromResultSet(rs));
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(extractClassFromResultSet(rs));
+                }
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return list;
     }
-
-    return list;
-}
 
 public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int page, int pageSize) {
     List<Classes> list = new ArrayList<>();
@@ -173,7 +173,7 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
 
 
     public Classes insert(Classes cls) {
-        String sql = "INSERT INTO classes (name, subject_id, teacher_id, is_deleted) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO classes (name, subject_id, teacher_id) VALUES (?, ?, ?)";
 
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -184,7 +184,6 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
             } else {
                 stmt.setNull(3, Types.BIGINT);
             }
-            stmt.setBoolean(4, cls.isDeleted());
 
             int rows = stmt.executeUpdate();
             if (rows > 0) {
@@ -202,7 +201,7 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
     }
 
     public boolean update(Long id, Classes cls) {
-        String sql = "UPDATE classes SET name = ?, subject_id = ?, teacher_id = ?, is_deleted = ? WHERE id = ?";
+        String sql = "UPDATE classes SET name = ?, subject_id = ?, teacher_id = ? WHERE id = ?";
 
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -213,7 +212,6 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
             } else {
                 stmt.setNull(3, Types.BIGINT);
             }
-            stmt.setBoolean(4, cls.isDeleted());
             stmt.setLong(5, id);
 
             return stmt.executeUpdate() > 0;
@@ -285,11 +283,10 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
         String name = rs.getString("name");
         Long subjectId = rs.getLong("subject_id");
         Long teacherId = rs.getLong("teacher_id");
-        boolean isDeleted = rs.getBoolean("is_deleted");
 
         Subject subject =(subjectId != 0) ? SubjectDAO.getInstance().findById(subjectId) : null;
         Teacher teacher = (teacherId != 0) ? TeacherDAO.getInstance().findById(teacherId) : null;
 
-        return new Classes(id, name, subject, teacher, isDeleted);
+        return new Classes(id, name, subject, teacher);
     }
 }

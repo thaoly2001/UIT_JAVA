@@ -42,6 +42,8 @@ public class AdminJFrame extends javax.swing.JFrame {
         btnMenuClass = new javax.swing.JButton();
         btnMenuEnrollment = new javax.swing.JButton();
         btnMenuEmp1 = new javax.swing.JButton();
+        btnMenuEnrollment1 = new javax.swing.JButton();
+        btnMenuEnrollment2 = new javax.swing.JButton();
         mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -72,7 +74,7 @@ public class AdminJFrame extends javax.swing.JFrame {
             }
         });
 
-        btnMenuEnrollment.setText("Quản lý Môn học");
+        btnMenuEnrollment.setText("Quản lý đăng nhập");
         btnMenuEnrollment.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         btnMenuEnrollment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,12 +90,19 @@ public class AdminJFrame extends javax.swing.JFrame {
             }
         });
 
-        btnMenuUser = new javax.swing.JButton();
-        btnMenuUser.setText("Quản lý Nhân viên");
-        btnMenuUser.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        btnMenuUser.addActionListener(new java.awt.event.ActionListener() {
+        btnMenuEnrollment1.setText("Quản lý Môn học");
+        btnMenuEnrollment1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnMenuEnrollment1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMenuUserActionPerformed(evt);
+                btnMenuEnrollment1ActionPerformed(evt);
+            }
+        });
+
+        btnMenuEnrollment2.setText("Đăng xuất");
+        btnMenuEnrollment2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnMenuEnrollment2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuEnrollment2ActionPerformed(evt);
             }
         });
 
@@ -109,25 +118,28 @@ public class AdminJFrame extends javax.swing.JFrame {
                     .addComponent(btnMenuClass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnMenuEnrollment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnMenuEmp1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnMenuUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnMenuEnrollment1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnMenuEnrollment2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         menuPanel1Layout.setVerticalGroup(
             menuPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnMenuEmp, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnMenuEmp, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMenuEmp1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnMenuEmp1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMenuDep, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnMenuDep, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMenuClass, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnMenuClass, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMenuEnrollment, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnMenuEnrollment1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMenuUser, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(217, 217, 217))
+                .addComponent(btnMenuEnrollment, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57)
+                .addComponent(btnMenuEnrollment2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(156, 156, 156))
         );
 
         mainPanel.setLayout(new java.awt.CardLayout());
@@ -164,7 +176,7 @@ public class AdminJFrame extends javax.swing.JFrame {
 
     private void btnMenuEnrollmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuEnrollmentActionPerformed
         CardLayout cl = (CardLayout) mainPanel.getLayout();
-        cl.show(mainPanel, "subject");
+        cl.show(mainPanel, "user");
     }//GEN-LAST:event_btnMenuEnrollmentActionPerformed
 
     private void btnMenuClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuClassActionPerformed
@@ -200,6 +212,17 @@ public class AdminJFrame extends javax.swing.JFrame {
         cl.show(mainPanel, "user");
     }//GEN-LAST:event_btnMenuUserActionPerformed
 
+    private void btnMenuEnrollment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuEnrollment1ActionPerformed
+         CardLayout cl = (CardLayout) mainPanel.getLayout();
+        cl.show(mainPanel, "subject");
+    }//GEN-LAST:event_btnMenuEnrollment1ActionPerformed
+
+    private void btnMenuEnrollment2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuEnrollment2ActionPerformed
+     this.dispose();
+     new FormDangNhap().setVisible(true);
+     
+    }//GEN-LAST:event_btnMenuEnrollment2ActionPerformed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> new AdminJFrame().setVisible(true));
     }
@@ -210,7 +233,8 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnMenuEmp;
     private javax.swing.JButton btnMenuEmp1;
     private javax.swing.JButton btnMenuEnrollment;
-    private javax.swing.JButton btnMenuUser;
+    private javax.swing.JButton btnMenuEnrollment1;
+    private javax.swing.JButton btnMenuEnrollment2;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel menuPanel1;
     // End of variables declaration//GEN-END:variables

@@ -358,14 +358,13 @@ public class EnrollmentDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_teacherTxtActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-
         saveClasses();
         saveStudent();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
        long id = Long.parseLong(enrollTbl.getValueAt(enrollTbl.getSelectedRow(), 0).toString());
-            StudentDialog dialog = new StudentDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, StudentsDAO.getInstance().findById(id));
+            StudentDialog dialog = new StudentDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, StudentsDAO.getInstance().findById(id), ClassesDAO.getInstance().findById(idClasses));
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
@@ -377,18 +376,18 @@ public class EnrollmentDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void enrollTblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enrollTblMouseClicked
-       if (evt.getClickCount() == 2 && enrollTbl.getSelectedRow() != -1) {
-            long id = Long.parseLong(enrollTbl.getValueAt(enrollTbl.getSelectedRow(), 0).toString());
-            StudentDialog dialog = new StudentDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, StudentsDAO.getInstance().findById(id));
-            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosed(java.awt.event.WindowEvent e) {
-                    initStudentData();
-                }
-            });
-            dialog.setLocationRelativeTo(this);
-            dialog.setVisible(true);
-        }
+//       if (evt.getClickCount() == 2 && enrollTbl.getSelectedRow() != -1) {
+//            long id = Long.parseLong(enrollTbl.getValueAt(enrollTbl.getSelectedRow(), 0).toString());
+//            StudentDialog dialog = new StudentDialog((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this), true, StudentsDAO.getInstance().findById(id),);
+//            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+//                @Override
+//                public void windowClosed(java.awt.event.WindowEvent e) {
+//                    initStudentData();
+//                }
+//            });
+//            dialog.setLocationRelativeTo(this);
+//            dialog.setVisible(true);
+//        }
     }//GEN-LAST:event_enrollTblMouseClicked
     private void filltable() {
         List<CachedEntity<Enrollment>> list = cache.getAll();
@@ -447,6 +446,8 @@ public class EnrollmentDialog extends javax.swing.JDialog {
         }
 
     }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel InfoClasses;
     private javax.swing.JPanel InfoClasses2;
