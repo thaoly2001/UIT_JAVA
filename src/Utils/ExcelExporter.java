@@ -142,7 +142,7 @@ public class ExcelExporter {
         }
     }
 
-    public static <T> void exportToExcel(List<String> headers, List<T> dataList, ExportFileName defaultFileName) {
+    public static <T> void exportToExcel(List<String> headers, List<T> dataList, ExportFileName defaultFileName, int imageColumnIndex) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
 
@@ -181,9 +181,23 @@ public class ExcelExporter {
                     for (Field field : obj.getClass().getDeclaredFields()) {
                         field.setAccessible(true);
                         Object value = field.get(obj);
-                        Cell cell = row.createCell(colNum++);
-                        cell.setCellValue(value != null ? value.toString() : "");
+                        Cell cell = row.createCell(colNum);
+                        if (colNum == imageColumnIndex && value instanceof byte[]) {
+                            byte[] imageBytes = (byte[]) value;
+                            if (imageBytes != null && imageBytes.length > 0) {
+                                int pictureIdx = workbook.addPicture(imageBytes, Workbook.PICTURE_TYPE_PNG);
+                                XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
+                                XSSFClientAnchor anchor = new XSSFClientAnchor(0, 0, 0, 0, colNum, rowNum - 1, colNum + 1, rowNum);
+                                drawing.createPicture(anchor, pictureIdx);
+                                // Set row height and column width to accommodate the image
+                                row.setHeightInPoints(80); // Adjust height as needed
+                                sheet.setColumnWidth(colNum, 25 * 256); // Adjust width as needed
+                            }
+                        } else {
+                            cell.setCellValue(value != null ? value.toString() : "");
+                        }
                         cell.setCellStyle(borderStyle);
+                        colNum++;
                     }
                 }
 
@@ -196,6 +210,10 @@ public class ExcelExporter {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static <T> void exportToExcel(List<String> headers, List<T> dataList, ExportFileName defaultFileName) {
+        exportToExcel(headers, dataList, defaultFileName, -1); // -1 indicates no image column
     }
 
     public static <T> void exportToExcel(JTable table, List<T> dataList, ExportFileName defaultFileName) {

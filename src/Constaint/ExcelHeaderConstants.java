@@ -10,9 +10,14 @@ public class ExcelHeaderConstants {
     );
 
     public static final List<String> CLASS_HEADERS = List.of(
-            "ID", "Tên lớp", "Mô tả", "Giáo viên", "Môn học", "Số lượng", "Ngày tạo"
+            "ID", "Tên lớp", "Mô tả", "Giáo viên"
     );
 
     public static final List<String> TEACHER_HEADERS = List.of(
-            "ID", "Tên", "Email", "Số điện thoại", "Giới Tính", "Ngày tạo", "Ngày cập nhật"
-    );}
+            "ID", "Tên", "Email", "Số điện thoại","Địa chỉ", "Giới Tính", "Ngày Sinh", "Ngày cập nhật"
+    );
+
+    public static final List<String> SUBJECT_HEADERS = List.of(
+            "ID", "Tên môn học", "Số tín chỉ"
+    );
+}

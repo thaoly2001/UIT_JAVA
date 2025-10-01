@@ -1,12 +1,19 @@
 package DAO;
 
-import MODEL.Teacher;
-import Utils.PageResult;
 import java.io.File;
 import java.io.FileInputStream;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
+import MODEL.Teacher;
+import Utils.PageResult;
 
 public class TeacherDAO extends KetNoiCSDL {
 
@@ -20,8 +27,8 @@ public class TeacherDAO extends KetNoiCSDL {
     }
 
     public void insertTeacherWithImage(Teacher teacher, String imagePath) {
-        String sql = "INSERT INTO teachers (name, email, phone, address, gender, img, birthday, department) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO teachers (name, email, phone, address, gender, img, birthday) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); FileInputStream fis = new FileInputStream(new File(imagePath))) {
 
@@ -32,7 +39,6 @@ public class TeacherDAO extends KetNoiCSDL {
             ps.setString(5, teacher.getGender());
             ps.setBinaryStream(6, fis, (int) new File(imagePath).length());
             ps.setDate(7, new java.sql.Date(System.currentTimeMillis()));
-            ps.setString(8, teacher.getDepartment());
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
@@ -45,8 +51,8 @@ public class TeacherDAO extends KetNoiCSDL {
     }
 
     public Teacher insert(Teacher t) {
-        String sql = "INSERT INTO teachers (name, email, phone, address, gender, birthday, department) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO teachers (name, email, phone, address, gender, birthday) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -60,8 +66,8 @@ public class TeacherDAO extends KetNoiCSDL {
             } else {
                 stmt.setNull(6, Types.DATE);
             }
-            stmt.setString(7, t.getDepartment());
 
+           
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -79,7 +85,7 @@ public class TeacherDAO extends KetNoiCSDL {
     }
 
     public boolean update(Long id, Teacher t) {
-        String sql = "UPDATE teachers SET name = ?, email = ?, phone = ?, address = ?, gender = ?, birthday = ?, department = ?, img = ? "
+        String sql = "UPDATE teachers SET name = ?, email = ?, phone = ?, address = ?, gender = ?, birthday = ?, img = ? "
                 + "WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -95,16 +101,15 @@ public class TeacherDAO extends KetNoiCSDL {
                 stmt.setNull(6, Types.DATE);
             }
 
-            stmt.setString(7, t.getDepartment());
 
             // Thêm ảnh (BLOB)
             if (t.getImg() != null) {
-                stmt.setBytes(8, t.getImg());
+                stmt.setBytes(7, t.getImg());
             } else {
-                stmt.setNull(8, Types.VARBINARY);
+                stmt.setNull(7, Types.VARBINARY);
             }
 
-            stmt.setLong(9, id);
+            stmt.setLong(8, id);
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -178,7 +183,7 @@ public class TeacherDAO extends KetNoiCSDL {
         String countSql = "SELECT COUNT(*) FROM teachers "
                 + "WHERE (name LIKE ? OR email LIKE ?)  AND is_deleted = 0 ";
 
-        String dataSql = "SELECT id, name, email, phone, address, gender, birthday, department, img "
+        String dataSql = "SELECT id, name, email, phone, address, gender, birthday, img "
                 + "FROM teachers "
                 + "WHERE (name LIKE ? OR email LIKE ?)  AND is_deleted = 0 "
                 + "ORDER BY id DESC "
@@ -249,7 +254,7 @@ public class TeacherDAO extends KetNoiCSDL {
         teacher.setPhone(rs.getString("phone"));
         teacher.setAddress(rs.getString("address"));
         teacher.setGender(rs.getString("gender"));
-        teacher.setImg(rs.getBytes("gender"));
+        teacher.setImg(rs.getBytes("img"));
         Date birthdaySql = rs.getDate("birthday");
         if (birthdaySql != null) {
             teacher.setBirthday(birthdaySql.toLocalDate());
@@ -258,7 +263,6 @@ public class TeacherDAO extends KetNoiCSDL {
         }
 
         teacher.setImg(rs.getBytes("img"));
-        teacher.setDepartment(rs.getString("department"));
 
         return teacher;
     }

@@ -361,7 +361,7 @@ private void initData() {
     private void btnUpdate2ActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             List<Teacher> teachers = dao.findAll();
-            ExcelExporter.exportToExcel(ExcelHeaderConstants.TEACHER_HEADERS, teachers, ExportFileName.TEACHER);
+            ExcelExporter.exportToExcel(ExcelHeaderConstants.TEACHER_HEADERS, teachers, ExportFileName.TEACHER, 8); // 8 is the index for the 'img' field
             JOptionPane.showMessageDialog(this, "Xuất Excel thành công!");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Lỗi khi xuất Excel: " + ex.getMessage());

@@ -11,13 +11,12 @@ public class Teacher {
     private String address;
     private String gender;
     private LocalDate birthday;
-    private String department;
     private byte[] img;
     
     public Teacher() {
     }
 
-    public Teacher(Long id, String name, String email, String phone, String address, String gender, LocalDate birthday, String department, byte[] img) {
+    public Teacher(Long id, String name, String email, String phone, String address, String gender, LocalDate birthday, byte[] img) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -25,7 +24,6 @@ public class Teacher {
         this.address = address;
         this.gender = gender;
         this.birthday = birthday;
-        this.department = department;
         this.img = img;
     }
 
@@ -92,14 +90,6 @@ public class Teacher {
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
     }
 
     @Override

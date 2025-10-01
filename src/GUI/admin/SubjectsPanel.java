@@ -1,9 +1,12 @@
 package GUI.admin;
 
 import Constaint.ActionPaging;
+import Constaint.ExcelHeaderConstants;
+import Constaint.ExportFileName;
 import DAO.SubjectDAO;
 import GUI.admin.popup.SubjectsDialog;
 import MODEL.Subject;
+import Utils.ExcelExporter;
 import Utils.PageResult;
 import Utils.tableFillingUtils;
 import java.util.List;
@@ -17,6 +20,7 @@ public class SubjectsPanel extends javax.swing.JPanel {
     private int pageSize = ActionPaging.defaultPgeSize;
     private int totalPage = ActionPaging.defaultTotalPage;
     private String keyword = "";
+    private List<Subject> listSubjects;
 
     public SubjectsPanel() {
         initComponents();
@@ -27,7 +31,7 @@ public class SubjectsPanel extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) subjectsTable.getModel();
         model.setRowCount(0);
         PageResult<Subject> data = dao.search(searchTxt.getText().trim(), currentPage + 1, pageSize);
-        List<Subject> list = data.getData();
+        listSubjects = data.getData();
         for (Subject s : data.getData()) {
             model.addRow(tableFillingUtils.fillSubject(s));
         }
@@ -329,7 +333,7 @@ public class SubjectsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_lastPageBtnActionPerformed
 
     private void btnUpdate1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdate1ActionPerformed
-        // TODO add your handling code here:
+        ExcelExporter.exportToExcel(ExcelHeaderConstants.SUBJECT_HEADERS, listSubjects, ExportFileName.SUBJECT);
     }//GEN-LAST:event_btnUpdate1ActionPerformed
     private boolean checkClickedTable() {
         System.out.println(subjectsTable.getSelectedRow());
