@@ -50,8 +50,7 @@ public class tableFillingUtils {
         return new Object[]{
             sub.getId(),
             sub.getName(),
-            sub.getCredit(),
-            !sub.isStatus() ? "Hoạt động" : "Không hoạt động"
+            sub.getCredit()
         };
     }
 

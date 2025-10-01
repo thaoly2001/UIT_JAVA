@@ -5,34 +5,17 @@ public class Subject {
     private Long id;
     private String name;
     private int credit;
-    private boolean status;
-    private boolean isdeleted;
 
     public Subject() {
     }
 
-    public Subject(Long id, String name, int credit, boolean isdeleted) {
+    public Subject(Long id, String name, int credit) {
         this.id = id;
         this.name = name;
         this.credit = credit;
-        this.status = isdeleted;
     }
 
-    public boolean isIsdeleted() {
-        return isdeleted;
-    }
 
-    public void setIsdeleted(boolean isdeleted) {
-        this.isdeleted = isdeleted;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
 
     public void setId(Long id) {
         this.id = id;

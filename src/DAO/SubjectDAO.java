@@ -69,19 +69,17 @@ public class SubjectDAO extends KetNoiCSDL {
     private Subject extractSubjectFromResultSet(ResultSet rs) throws SQLException {
         Subject subject = new Subject();
         subject.setId(rs.getLong("id"));
-        subject.setName(rs.getString("name"));
+        subject.setName(rs.getString("name"));       
         subject.setCredit(rs.getInt("credit"));
-        subject.setStatus(rs.getBoolean("status"));
         return subject;
     }
 
     public Subject insert(Subject subject) {
-        String sql = "INSERT INTO subjects (name, credit, status) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO subjects (name, credit) VALUES (?, ?)";
 
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, subject.getName());
             stmt.setInt(2, subject.getCredit());
-            stmt.setBoolean(3, subject.isStatus());
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -98,12 +96,11 @@ public class SubjectDAO extends KetNoiCSDL {
     }
 
     public boolean update(Long id, Subject subject) {
-        String sql = "UPDATE subjects SET name = ?, credit = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE subjects SET name = ?, credit = ? WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, subject.getName());
             stmt.setInt(2, subject.getCredit());
-            stmt.setBoolean(3, subject.isStatus());
-            stmt.setLong(4, id);
+            stmt.setLong(3, id);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -170,7 +167,7 @@ public class SubjectDAO extends KetNoiCSDL {
 
         String countSql = "SELECT COUNT(*) FROM subjects WHERE name LIKE ? AND is_deleted = 0";
 
-        String dataSql = "SELECT id, name, credit, is_deleted "
+        String dataSql = "SELECT id, name "
                 + "FROM subjects "
                 + "WHERE name LIKE ? "
                 + "ORDER BY id DESC "
@@ -237,3 +234,4 @@ public class SubjectDAO extends KetNoiCSDL {
         return 0;
     }
 }
+

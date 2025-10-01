@@ -170,7 +170,6 @@ public class EnrollmentDAO extends KetNoiCSDL {
                 subject.setId(rs.getLong("sub_id"));
                 subject.setName(rs.getString("sub_name"));
                 subject.setCredit(rs.getInt("credit"));
-                subject.setIsdeleted(rs.getBoolean("is_deleted"));
 
                 Classes classes = new Classes();
                 classes.setId(rs.getLong("c_id"));
@@ -222,7 +221,6 @@ public class EnrollmentDAO extends KetNoiCSDL {
                 subject.setId(rs.getLong("sub_id"));
                 subject.setName(rs.getString("sub_name"));
                 subject.setCredit(rs.getInt("credit"));
-                subject.setIsdeleted(rs.getBoolean("is_deleted"));
 
                 Classes classes = new Classes();
                 classes.setId(rs.getLong("c_id"));
@@ -280,7 +278,6 @@ public class EnrollmentDAO extends KetNoiCSDL {
                 subject.setId(rs.getLong("sub_id"));
                 subject.setName(rs.getString("sub_name"));
                 subject.setCredit(rs.getInt("credit"));
-                subject.setIsdeleted(rs.getBoolean("is_deleted"));
 
                 Classes classes = new Classes();
                 classes.setId(rs.getLong("c_id"));
@@ -347,7 +344,6 @@ public class EnrollmentDAO extends KetNoiCSDL {
                     subject.setId(rs.getLong("subid"));
                     subject.setName(rs.getString("subname"));
                     subject.setCredit(rs.getInt("credit"));
-                    subject.setIsdeleted(rs.getBoolean("sub_deleted"));
 
                     Classes classes = new Classes();
                     classes.setId(rs.getLong("cid"));
