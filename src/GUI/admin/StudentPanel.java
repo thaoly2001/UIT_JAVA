@@ -163,6 +163,11 @@ public class StudentPanel extends javax.swing.JPanel {
 
         btnUpdate2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/e.png"))); // NOI18N
         btnUpdate2.setText("Xuất Excel");
+        btnUpdate2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdate2ActionPerformed(evt);
+            }
+        });
 
         firstPageBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/First.png"))); // NOI18N
         firstPageBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -340,8 +345,14 @@ public class StudentPanel extends javax.swing.JPanel {
         this.last();
     }//GEN-LAST:event_lastPageBtnActionPerformed
     private void btnUpdate2ActionPerformed(java.awt.event.ActionEvent evt) {
-        List<Student> list = dao.export(searchTxt.getText().trim());
-        ExcelExporter.exportToExcel(ExcelHeaderConstants.STUDENT_HEADERS, list, ExportFileName.STUDENT);
+        try {
+            List<Student> list = dao.export(searchTxt.getText().trim());
+            ExcelExporter.exportToExcel(ExcelHeaderConstants.STUDENT_HEADERS, list, ExportFileName.STUDENT, 7);
+            JOptionPane.showMessageDialog(this, "Xuất Excel thành công!");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi xuất Excel: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
     private void openCreateUpdateDialog(Student stu) {

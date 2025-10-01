@@ -209,6 +209,7 @@ private void initData() {
             }
         });
 
+        btnUpdate2.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         btnUpdate2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/e.png"))); // NOI18N
         btnUpdate2.setText("Xuất file");
 
@@ -227,13 +228,12 @@ private void initData() {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnDelete1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnAdd1, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                            .addComponent(btnUpdate1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(btnUpdate2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnDelete1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAdd1, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                        .addComponent(btnUpdate1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnUpdate2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -365,7 +365,7 @@ private void initData() {
     private void btnUpdate2ActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             List<Teacher> teachers = dao.findAll();
-            ExcelExporter.exportToExcel(ExcelHeaderConstants.TEACHER_HEADERS, teachers, ExportFileName.TEACHER, 8); // 8 is the index for the 'img' field
+            ExcelExporter.exportToExcel(ExcelHeaderConstants.TEACHER_HEADERS, teachers, ExportFileName.TEACHER, 7); // 7 is the index for the 'img' field
             JOptionPane.showMessageDialog(this, "Xuất Excel thành công!");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Lỗi khi xuất Excel: " + ex.getMessage());
