@@ -117,8 +117,10 @@ public class EnrollmentDialog extends javax.swing.JDialog {
 
         jButton7.setText("Xóa");
 
+        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/iconfinder_Cancel_.png"))); // NOI18N
         jButton9.setText("Hủy");
 
+        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/save.png"))); // NOI18N
         btnAdd.setText("Lưu");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -168,28 +170,27 @@ public class EnrollmentDialog extends javax.swing.JDialog {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        firstPageBtn3.setText("||<");
+        firstPageBtn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/First.png"))); // NOI18N
         firstPageBtn3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 firstPageBtn3ActionPerformed(evt);
             }
         });
 
-        prevPageBtn.setText("<");
+        prevPageBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/back.png"))); // NOI18N
         prevPageBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 prevPageBtnActionPerformed(evt);
             }
         });
 
-        nextPageBtn.setText(">");
+        nextPageBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/next.png"))); // NOI18N
         nextPageBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nextPageBtnActionPerformed(evt);
             }
         });
 
-        lastPageBtn.setText(">||");
         lastPageBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lastPageBtnActionPerformed(evt);

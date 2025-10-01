@@ -160,7 +160,7 @@
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/GUI/images/iconfinder_Cancel_.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Hủy"/>
+                    <Property name="text" type="java.lang.String" value="H&#x1ee7;y"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnAdd">
@@ -168,7 +168,7 @@
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/GUI/images/save.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Lưu"/>
+                    <Property name="text" type="java.lang.String" value="L&#x1b0;u"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddActionPerformed"/>
@@ -222,7 +222,9 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="firstPageBtn3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="||&lt;"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Icon/First.png"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="firstPageBtn3ActionPerformed"/>
@@ -230,7 +232,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="prevPageBtn">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Icon/back.png"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="prevPageBtnActionPerformed"/>
@@ -238,16 +242,15 @@
             </Component>
             <Component class="javax.swing.JButton" name="nextPageBtn">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&gt;"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Icon/next.png"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nextPageBtnActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="lastPageBtn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="&gt;||"/>
-              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lastPageBtnActionPerformed"/>
               </Events>
