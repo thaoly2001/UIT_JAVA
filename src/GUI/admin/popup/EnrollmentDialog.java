@@ -117,10 +117,10 @@ public class EnrollmentDialog extends javax.swing.JDialog {
 
         jButton7.setText("Xóa");
 
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/iconfinder_Cancel_.png"))); // NOI18N
+        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/iconfinder_Cancel_.png"))); // NOI18N
         jButton9.setText("Hủy");
 
-        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/save.png"))); // NOI18N
+        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/save.png"))); // NOI18N
         btnAdd.setText("Lưu");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

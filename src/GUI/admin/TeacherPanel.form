@@ -283,7 +283,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/Icon/e.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Xu&#x1ea5;t file"/>
+        <Property name="text" type="java.lang.String" value="Excel"/>
       </Properties>
     </Component>
   </SubComponents>

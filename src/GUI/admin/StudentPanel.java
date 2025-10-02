@@ -162,7 +162,7 @@ public class StudentPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(stdTable);
 
         btnUpdate2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/e.png"))); // NOI18N
-        btnUpdate2.setText("Xuất Excel");
+        btnUpdate2.setText("Excel");
         btnUpdate2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdate2ActionPerformed(evt);
@@ -308,7 +308,7 @@ public class StudentPanel extends javax.swing.JPanel {
 
         int confirm = JOptionPane.showConfirmDialog(
                 this,
-                "Bạn có chắc chắn muốn xóa môn học: " + subject.getName() + "?",
+                "Bạn có chắc chắn muốn xóa sinh viên: " + subject.getName() + "?",
                 "Xác nhận xóa",
                 JOptionPane.YES_NO_OPTION
         );
@@ -344,7 +344,11 @@ public class StudentPanel extends javax.swing.JPanel {
     private void lastPageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastPageBtnActionPerformed
         this.last();
     }//GEN-LAST:event_lastPageBtnActionPerformed
-    private void btnUpdate2ActionPerformed(java.awt.event.ActionEvent evt) {
+
+    private void btnUpdate2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdate2ActionPerformed
+       export(evt);
+    }//GEN-LAST:event_btnUpdate2ActionPerformed
+    private void export(java.awt.event.ActionEvent evt) {
         try {
             List<Student> list = dao.export(searchTxt.getText().trim());
             ExcelExporter.exportToExcel(ExcelHeaderConstants.STUDENT_HEADERS, list, ExportFileName.STUDENT, 7);

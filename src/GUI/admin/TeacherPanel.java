@@ -211,7 +211,7 @@ private void initData() {
 
         btnUpdate2.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         btnUpdate2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/e.png"))); // NOI18N
-        btnUpdate2.setText("Xuất file");
+        btnUpdate2.setText("Excel");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

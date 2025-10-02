@@ -212,7 +212,7 @@ public PageResult<Classes> searchByTeacherId(String keyword, Long teacherId, int
             } else {
                 stmt.setNull(3, Types.BIGINT);
             }
-            stmt.setLong(5, id);
+            stmt.setLong(4, id);
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {

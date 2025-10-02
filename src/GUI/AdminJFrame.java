@@ -82,7 +82,7 @@ public class AdminJFrame extends javax.swing.JFrame {
             }
         });
 
-        btnMenuEmp1.setText("Quản Lý Học Sinh");
+        btnMenuEmp1.setText("Quản Lý Sinh Viên");
         btnMenuEmp1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         btnMenuEmp1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

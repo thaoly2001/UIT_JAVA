@@ -31,16 +31,17 @@ public class UserDialog extends javax.swing.JDialog {
     private final JTable table;
     private final Long ID;
     private String previousRole;
+    private boolean isInitializing = true;
 
     public UserDialog(java.awt.Frame parent, boolean modal, Users user, JTable t) {
         super(parent, modal);
         initComponents();
         table = t;
-        fillForm(user);
         ID = Objects.nonNull(user) ? user.getId() : null;
+        fillForm(user);
         previousRole = (String) roleComboBox.getSelectedItem();
-        updateEmailFieldState(); // Ensure initial state is set correctly
-        setTitle(TitleConstants.USER_MANAGEMENT_TITLE); // Use the constant here
+        isInitializing = false;
+        setTitle(TitleConstants.USER_MANAGEMENT_TITLE); 
     }
 
     /**
@@ -181,6 +182,9 @@ public class UserDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void roleComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        if (isInitializing) {
+            return;
+        }
         String currentRole = (String) roleComboBox.getSelectedItem();
         if (currentRole == null) {
             return;
@@ -253,7 +257,7 @@ public class UserDialog extends javax.swing.JDialog {
     }
 
     private void update() {
-        UsersDAO.getInstance().update(getData());
+        UsersDAO.getInstance().updateUserByAdmin(getData());
         JOptionPane.showMessageDialog(this,
                 "Cập nhật người dùng thành công!",
                 "Thông báo",
@@ -266,7 +270,9 @@ public class UserDialog extends javax.swing.JDialog {
 
     private Users getData() {
         Users user = new Users();
-        user.setId(idTxt.getText().isEmpty() ? null : Long.valueOf(idTxt.getText()));
+        if(!idTxt.getText().isEmpty()){
+                    user.setId(Long.valueOf(idTxt.getText().split("-")[0]));
+        }
         String selectedRole = (String) roleComboBox.getSelectedItem();
         String email = emailTxt.getText();
         if ("Giáo viên".equals(selectedRole)) {

@@ -155,7 +155,7 @@ public class UsersDAO extends KetNoiCSDL {
     public boolean add(Users user) {
         String sql = "INSERT INTO Users (username, password, role, email, is_deleted) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            String generatedPassword = EmailUtil.generateRandomPassword(16);
+            String generatedPassword = " kEjnxNZOjlItBhdl";//EmailUtil.generateRandomPassword(16);
             user.setPassword(generatedPassword);
 
             stmt.setString(1, user.getUsername());
@@ -195,6 +195,21 @@ public class UsersDAO extends KetNoiCSDL {
             stmt.setString(4, user.getEmail());
             stmt.setBoolean(5, user.isIsDeleted());
             stmt.setLong(6, user.getId());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateUserByAdmin(Users user) {
+        String sql = "UPDATE Users SET username = ?, role = ?, email = ?, is_deleted = ? WHERE id = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getUsername());
+            stmt.setByte(2, user.getRole());
+            stmt.setString(3, user.getEmail());
+            stmt.setBoolean(4, user.isIsDeleted());
+            stmt.setLong(5, user.getId());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
